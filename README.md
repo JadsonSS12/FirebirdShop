@@ -1,107 +1,285 @@
 # FirebirdShop
 
-A modern e-commerce application built with FastAPI backend.
+Uma API moderna de e-commerce construída com backend FastAPI e banco de dados Firebird.
 
-## Project Structure
+## Estrutura do Projeto
 
 ```
 FirebirdShop/
-├── backend/          # FastAPI backend application
-│   ├── main.py      # Main application entry point
-│   └── __pycache__/ # Python cache files
-├── LICENSE          # Project license
-└── README.md        # This file
+├── backend/          # Aplicação backend FastAPI
+│   ├── main.py      # Ponto de entrada principal da aplicação
+│   ├── models.py    # Modelos de banco de dados (SQLAlchemy)
+│   ├── schemas.py   # Schemas Pydantic para a API
+│   ├── crud.py      # Operações de banco de dados
+│   ├── database.py  # Configuração do banco de dados
+│   └── __pycache__/ # Arquivos de cache do Python
+├── venv/            # Ambiente virtual
+├── shop.fdb         # Arquivo do banco de dados Firebird
+├── LICENSE          # Licença do projeto
+└── README.md        # Este arquivo
 ```
 
-## Backend Setup
+## Pré-requisitos
 
-### Prerequisites
+- Python 3.8 ou superior
+- Servidor Firebird 5.0 instalado e executando
+- pip (instalador de pacotes Python)
 
-- Python 3.8 or higher
-- pip (Python package installer)
+## Configuração do Banco de Dados Firebird
 
-### Installation and Setup
+### Instalando o Firebird 5.0
 
-1. **Clone the repository** (if you haven't already):
+1. **Baixe e instale o Firebird 5.0** do site oficial
+2. **Para instalação Linux em /opt/firebird**, certifique-se de que o serviço está executando:
+
+   ```bash
+   # Iniciar serviço Firebird
+   sudo /opt/firebird/bin/firebird start
+   
+   # Ou se usando systemd
+   sudo systemctl start firebird
+   sudo systemctl enable firebird
+   ```
+
+3. **Criar o diretório do banco de dados**:
+
+   ```bash
+   sudo mkdir -p /opt/firebird/data
+   sudo chown firebird:firebird /opt/firebird/data
+   ```
+
+4. **Criar o banco de dados**:
+
+   ```bash
+   sudo /opt/firebird/bin/isql -user SYSDBA -password masterkey
+   ```
+
+   No isql, execute:
+   ```sql
+   CREATE DATABASE '/opt/firebird/data/shop.fdb';
+   QUIT;
+   ```
+
+5. **Definir as permissões adequadas**:
+
+   ```bash
+   sudo chown firebird:firebird /opt/firebird/data/shop.fdb
+   sudo chmod 660 /opt/firebird/data/shop.fdb
+   ```
+
+## Configuração do Backend
+
+### Instalação e Configuração
+
+1. **Clone o repositório** (se ainda não o fez):
 
    ```bash
    git clone https://github.com/Raylandson/FirebirdShop.git
    cd FirebirdShop
    ```
 
-2. **Navigate to the backend directory**:
-
-   ```bash
-   cd backend
-   ```
-
-3. **Create a virtual environment**:
+2. **Crie um ambiente virtual**:
 
    ```bash
    python -m venv venv
    ```
 
-4. **Activate the virtual environment**:
+3. **Ative o ambiente virtual**:
 
-   On Linux/macOS:
+   No Linux/macOS:
 
    ```bash
    source venv/bin/activate
    ```
 
-   On Windows:
+   No Windows:
 
    ```bash
    venv\Scripts\activate
    ```
 
-5. **Install required dependencies**:
+4. **Instale todas as dependências necessárias**:
 
    ```bash
-   pip install "fastapi[standard]"
+   pip install fastapi uvicorn sqlalchemy sqlalchemy-firebird==0.8.0 fdb firebird-driver pydantic python-multipart
    ```
 
-6. **Run the development server**:
+### Lista Completa de Dependências
+
+O projeto requer os seguintes pacotes Python:
+
+```text
+fastapi>=0.68.0          # Framework web moderno para construção de APIs
+uvicorn[standard]>=0.15.0 # Servidor ASGI para executar FastAPI
+sqlalchemy>=1.4.0        # Toolkit SQL Python e ORM
+sqlalchemy-firebird==0.8.0 # Dialeto Firebird para SQLAlchemy
+fdb>=2.0.0              # Driver Python para Firebird
+firebird-driver>=1.10.0 # Driver Firebird moderno
+pydantic>=1.8.0         # Validação de dados usando anotações de tipo Python
+python-multipart>=0.0.5 # Para análise de dados de formulário
+```
+
+### Métodos Alternativos de Instalação
+
+**Opção 1 - Instalar tudo de uma vez**:
+```bash
+pip install fastapi uvicorn sqlalchemy sqlalchemy-firebird==0.8.0 fdb firebird-driver pydantic python-multipart
+```
+
+**Opção 2 - Usando requirements.txt** (crie este arquivo):
+```bash
+# Criar arquivo requirements.txt
+cat > requirements.txt << EOF
+fastapi>=0.68.0
+uvicorn[standard]>=0.15.0
+sqlalchemy>=1.4.0
+sqlalchemy-firebird==0.8.0
+fdb>=2.0.0
+firebird-driver>=1.10.0
+pydantic>=1.8.0
+python-multipart>=0.0.5
+EOF
+
+# Instalar do requirements.txt
+pip install -r requirements.txt
+```
+
+5. **Verificar a instalação**:
 
    ```bash
-   fastapi dev main.py
+   # Verificar se todos os pacotes estão instalados
+   pip list | grep -E "(fastapi|uvicorn|sqlalchemy|firebird|fdb|pydantic)"
    ```
 
-   The API will be available at: `http://127.0.0.1:8000`
+6. **Testar a conexão com o banco de dados**:
 
-7. **Access the interactive API documentation**:
+   ```bash
+   python -c "
+   import fdb
+   try:
+       con = fdb.connect(dsn='localhost:3050/opt/firebird/data/shop.fdb', user='SYSDBA', password='masterkey')
+       print('✅ Conexão com banco de dados bem-sucedida!')
+       con.close()
+   except Exception as e:
+       print('❌ Falha na conexão com o banco de dados:', e)
+   "
+   ```
+
+7. **Execute o servidor de desenvolvimento**:
+
+   ```bash
+   python -m uvicorn backend.main:app --reload
+   ```
+
+   A API estará disponível em: `http://127.0.0.1:8000`
+
+8. **Acesse a documentação interativa da API**:
    - Swagger UI: `http://127.0.0.1:8000/docs`
    - ReDoc: `http://127.0.0.1:8000/redoc`
 
-### Quick Start Commands
+### Comandos de Início Rápido
 
-For a quick setup, run these commands in sequence:
+Para uma configuração completa do zero, execute estes comandos em sequência:
 
 ```bash
-cd backend
+# Clone e configure o projeto
+git clone https://github.com/Raylandson/FirebirdShop.git
+cd FirebirdShop
+
+# Crie e ative o ambiente virtual
 python -m venv venv
-source venv/bin/activate  # On Linux/macOS
-pip install "fastapi[standard]"
-fastapi dev main.py
+source venv/bin/activate  # No Linux/macOS (ou venv\Scripts\activate no Windows)
+
+# Instale todas as dependências
+pip install fastapi uvicorn sqlalchemy sqlalchemy-firebird==0.8.0 fdb firebird-driver pydantic python-multipart
+
+# Execute a aplicação
+python -m uvicorn backend.main:app --reload
 ```
 
-### Development
+## Endpoints da API
 
-- The backend uses FastAPI framework
-- Hot reload is enabled with the `--reload` flag
-- Make sure to activate the virtual environment before running any Python commands
-- Install additional packages using `pip install <package-name>` while the virtual environment is activated
+A API fornece os seguintes endpoints para gerenciamento de produtos:
 
-### Deactivating Virtual Environment
+### Produtos
+- `GET /` - Mensagem de boas-vindas e status da API
+- `GET /produtos/` - Listar todos os produtos (com paginação)
+- `POST /produtos/` - Criar um novo produto
+- `GET /produtos/{produto_id}` - Obter um produto específico por ID
 
-When you're done working, you can deactivate the virtual environment:
+### Exemplo de Uso
+
+**Criar um produto**:
+```bash
+curl -X POST "http://127.0.0.1:8000/produtos/" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "nome": "Notebook Dell",
+       "descricao": "Notebook para desenvolvimento",
+       "preco": 2500.99,
+       "estoque": 10
+     }'
+```
+
+**Listar produtos**:
+```bash
+curl "http://127.0.0.1:8000/produtos/"
+```
+
+**Obter produto específico**:
+```bash
+curl "http://127.0.0.1:8000/produtos/1"
+```
+
+## Esquema do Banco de Dados
+
+A aplicação cria automaticamente a seguinte estrutura de tabela:
+
+```sql
+CREATE TABLE PRODUTOS (
+    ID INTEGER NOT NULL PRIMARY KEY,
+    NOME VARCHAR(100) NOT NULL,
+    DESCRICAO VARCHAR(500),
+    PRECO NUMERIC(10,2) NOT NULL,
+    ESTOQUE INTEGER
+);
+
+CREATE INDEX ix_PRODUTOS_nome ON PRODUTOS(NOME);
+CREATE INDEX ix_PRODUTOS_id ON PRODUTOS(ID);
+```
+
+## Desenvolvimento
+
+- O backend usa o framework FastAPI com ORM SQLAlchemy
+- Hot reload está habilitado com a flag `--reload`
+- As tabelas do banco de dados são criadas automaticamente na primeira execução
+- Certifique-se de ativar o ambiente virtual antes de executar qualquer comando Python
+- Instale pacotes adicionais usando `pip install <nome-do-pacote>` enquanto o ambiente virtual estiver ativado
+
+## Solução de Problemas
+
+### Problemas Comuns
+
+1. **Erros de conexão com banco de dados**: 
+   - Certifique-se de que o serviço Firebird está executando
+   - Verifique as permissões do arquivo de banco de dados
+   - Verifique o caminho do banco de dados em `backend/database.py`
+
+2. **Erros de importação**: 
+   - Certifique-se de que o ambiente virtual está ativado
+   - Reinstale as dependências se necessário
+
+3. **Porta já em uso**: 
+   - Use uma porta diferente: `uvicorn backend.main:app --reload --port 8001`
+
+### Desativando o Ambiente Virtual
+
+Quando terminar de trabalhar, você pode desativar o ambiente virtual:
 
 ```bash
 deactivate
 ```
 
-## API Endpoints
+## Licença
 
-Currently available endpoints:
-
-- `GET /` - Returns a simple "Hello World" message
+Este projeto está licenciado sob os termos especificados no arquivo LICENSE.
