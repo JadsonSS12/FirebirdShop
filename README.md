@@ -69,6 +69,38 @@ FirebirdShop/
 
 ## Configuração do Backend
 
+### Configuração de Ambiente (.env)
+
+O projeto usa um arquivo `.env` para configurações de conexão com o banco de dados, tornando-o compatível com diferentes sistemas operacionais:
+
+1. **Copie o arquivo de exemplo para criar seu arquivo de configuração**:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Edite o arquivo `.env` com suas configurações locais**:
+
+   No Linux:
+   ```
+   DB_USER=SYSDBA
+   DB_PASSWORD=masterkey
+   DB_HOST=localhost
+   DB_PORT=3050
+   DB_PATH=/opt/firebird/data/shop.fdb
+   DB_CHARSET=UTF8
+   ```
+
+   No Windows:
+   ```
+   DB_USER=SYSDBA
+   DB_PASSWORD=masterkey
+   DB_HOST=localhost
+   DB_PORT=3050
+   DB_PATH=C:/firebird/data/shop.fdb
+   DB_CHARSET=UTF8
+   ```
+
 ### Instalação e Configuração
 
 1. **Clone o repositório** (se ainda não o fez):
@@ -117,13 +149,14 @@ fdb>=2.0.0              # Driver Python para Firebird
 firebird-driver>=1.10.0 # Driver Firebird moderno
 pydantic>=1.8.0         # Validação de dados usando anotações de tipo Python
 python-multipart>=0.0.5 # Para análise de dados de formulário
+python-dotenv>=1.0.0    # Para carregar variáveis de ambiente do arquivo .env
 ```
 
 ### Métodos Alternativos de Instalação
 
 **Opção 1 - Instalar tudo de uma vez**:
 ```bash
-pip install fastapi uvicorn sqlalchemy sqlalchemy-firebird==0.8.0 fdb firebird-driver pydantic python-multipart
+pip install fastapi uvicorn sqlalchemy sqlalchemy-firebird==0.8.0 fdb firebird-driver pydantic python-multipart python-dotenv
 ```
 
 **Opção 2 - Usando requirements.txt** (crie este arquivo):
@@ -138,6 +171,7 @@ fdb>=2.0.0
 firebird-driver>=1.10.0
 pydantic>=1.8.0
 python-multipart>=0.0.5
+python-dotenv>=1.0.0
 EOF
 
 # Instalar do requirements.txt

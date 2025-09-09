@@ -1,11 +1,24 @@
 # database.py
 
+import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+# Carrega as variáveis de ambiente do arquivo .env
+load_dotenv()
+
+# Obtém variáveis de ambiente
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT")
+DB_PATH = os.getenv("DB_PATH")  
+DB_CHARSET = os.getenv("DB_CHARSET")
+
 # STRING DE CONEXÃO para Firebird 5.0
-SQLALCHEMY_DATABASE_URL = "firebird+fdb://SYSDBA:masterkey@localhost:3050//opt/firebird/data/shop.fdb?charset=UTF8"
+SQLALCHEMY_DATABASE_URL = f"firebird+fdb://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_PATH}?charset={DB_CHARSET}"
 
 # Cria a engine de conexão com o banco de dados
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
