@@ -5,8 +5,8 @@ from typing import List
 from . import models, schemas
 from .crud import create_produto, get_produtos, get_produto, update_produto
 from .crud import create_cliente, get_clientes, get_cliente
-from .crud import create_cliente_email, get_clientes_email, get_cliente_email
-from .crud import create_cliente_telefone, get_clientes_telefone, get_cliente_telefone
+from .crud import create_cliente_email, get_clientes_email, get_cliente_email, get_cliente_emails
+from .crud import create_cliente_telefone, get_clientes_telefone, get_cliente_telefone, get_cliente_telefones
 from .database import engine, get_db
 
 # Cria as tabelas no banco de dados (se não existirem)
@@ -62,38 +62,53 @@ def ler_cliente(cliente_id: int, db: Session = Depends(get_db)):
     return db_cliente
 
 # Endpoints para clientes-telefone
-@app.post("/clientes-telefone/", response_model=schemas.ClienteTelefone, tags=["Clientes"])
+@app.post("/clientes-telefone/", response_model=schemas.ClienteTelefone, tags=["Clientes-telefone"])
 def criar_cliente_telefone(cliente_telefone: schemas.ClienteTelefoneCreate, db: Session = Depends(get_db)):
     return create_cliente_telefone(db=db, cliente_telefone=cliente_telefone)
 
-@app.get("/clientes-telefone/", response_model=List[schemas.ClienteTelefone], tags=["Clientes"])
+@app.get("/clientes-telefone/", response_model=List[schemas.ClienteTelefone], tags=["Clientes-telefone"])
 def ler_clientes_telefone(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     clientes = get_clientes_telefone(db, skip=skip, limit=limit)
     return clientes
 
-@app.get("/clientes-telefone/{cliente_id}", response_model=schemas.ClienteTelefone, tags=["Clientes"])
-def ler_cliente_telefone(cliente_id: int, db: Session = Depends(get_db)):
-    db_cliente_telefone = get_cliente_telefone(db, cliente_id=cliente_id)
+@app.get("/clientes-telefone-id/{cliente_telefone_id}", response_model=schemas.ClienteTelefone, tags=["Clientes-telefone"])
+def ler_cliente_telefone(cliente_telefone_id: int, db: Session = Depends(get_db)):
+    db_cliente_telefone = get_cliente_telefone(db, cliente_telefone_id=cliente_telefone_id)
     if db_cliente_telefone is None:
         raise HTTPException(status_code=404, detail="Telefone não encontrado")
     return db_cliente_telefone
 
+@app.get("/clientes-telefone-cliente/{cliente_id}", response_model=List[schemas.ClienteTelefone], tags=["Clientes-telefone"])
+def ler_cliente_telefones(cliente_id: int, db: Session = Depends(get_db)):
+    db_cliente_telefones = get_cliente_telefones(db, cliente_id=cliente_id)
+    if db_cliente_telefones is None:
+        raise HTTPException(status_code=404, detail="Telefones não encontrados")
+    return db_cliente_telefones
+
 # Endpoints para clientes
-@app.post("/clientes-email/", response_model=schemas.ClienteEmail, tags=["Clientes"])
+@app.post("/clientes-email/", response_model=schemas.ClienteEmail, tags=["Clientes-email"])
 def criar_cliente_email(cliente_email: schemas.ClienteEmailCreate, db: Session = Depends(get_db)):
     return create_cliente_email(db=db, cliente_email=cliente_email)
 
-@app.get("/clientes-email/", response_model=List[schemas.ClienteEmail], tags=["Clientes"])
+@app.get("/clientes-email/", response_model=List[schemas.ClienteEmail], tags=["Clientes-email"])
 def ler_clientes_email(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     clientes = get_clientes_email(db, skip=skip, limit=limit)
     return clientes
 
-@app.get("/clientes-email/{cliente_id}", response_model=schemas.ClienteEmail, tags=["Clientes"])
-def ler_cliente_email(cliente_id: int, db: Session = Depends(get_db)):
-    db_cliente_email = get_cliente_email(db, cliente_id=cliente_id)
+@app.get("/clientes-email-id/{cliente_email_id}", response_model=schemas.ClienteEmail, tags=["Clientes-email"])
+def ler_cliente_email(cliente_email_id: int, db: Session = Depends(get_db)):
+    db_cliente_email = get_cliente_email(db, cliente_email_id=cliente_email_id)
     if db_cliente_email is None:
         raise HTTPException(status_code=404, detail="Email não encontrado")
     return db_cliente_email
+
+@app.get("/clientes-email-cliente/{cliente_id}", response_model=List[schemas.ClienteEmail], tags=["Clientes-email"])
+def ler_cliente_email(cliente_id: int, db: Session = Depends(get_db)):
+    db_cliente_email = get_cliente_emails(db, cliente_id=cliente_id)
+    if db_cliente_email is None:
+        raise HTTPException(status_code=404, detail="Email não encontrado")
+    return db_cliente_email
+
 
 @app.get("/reset-db/")
 def reset_db():

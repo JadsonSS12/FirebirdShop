@@ -1,15 +1,19 @@
 from sqlalchemy.orm import Session
 from .. import models, schemas
 
-# Função para buscar um cliente por ID
-def get_cliente_email(db: Session, cliente_email_id: int):
-    return db.query(models.ClienteEmail).filter(models.ClienteEmail.id == cliente_email_id).first()
-
-# Função para buscar uma lista de clientes
+# Função para buscar uma lista de emails dos clientes
 def get_clientes_email(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.ClienteEmail).offset(skip).limit(limit).all()
 
-# Função para criar um novo cliente
+# Função para buscar um email do cliente por ID
+def get_cliente_email(db: Session, cliente_email_id: int):
+    return db.query(models.ClienteEmail).filter(models.ClienteEmail.id == cliente_email_id).first()
+
+# Função para buscar todos os emails de um cliente específico
+def get_cliente_emails(db: Session, cliente_id: int):
+    return db.query(models.ClienteEmail).filter(models.ClienteEmail.cliente_id == cliente_id).all()
+
+# Função para criar um novo email de cliente
 def create_cliente_email(db: Session, cliente_email: schemas.ClienteEmailCreate):
      # ATENÇÃO: Gerenciamento manual do ID para este exemplo.
     # Em um sistema real, o ID viria de um Generator/Sequence.

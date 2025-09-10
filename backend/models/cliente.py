@@ -10,11 +10,11 @@ class Cliente(Base):
     nome = Column(String(50), nullable=False) 
     cpf_cnpj = Column(String(14), nullable=False, unique=True) 
     limite_de_credito = Column(Numeric(11, 2), nullable=False)
-    cep = Column(String(8), nullable=False) 
+    cep = Column(String(10), nullable=False) 
     estado = Column(String(20), nullable=False) 
     cidade = Column(String(20), nullable=False) 
     bairro = Column(String(20), nullable=False) 
-    rua = Column(String(20), nullable=False)
+    rua = Column(String(30), nullable=False)
     numero = Column(String(10), nullable=False)
     
     __table_args__ = (
