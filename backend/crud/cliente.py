@@ -33,3 +33,34 @@ def create_cliente(db: Session, cliente: schemas.ClienteCreate):
     db.refresh(db_cliente)
     return db_cliente
 
+# Função para atualizar um cliente existente
+def update_cliente(db: Session, cliente_id: int, cliente_data: schemas.ClienteUpdate):
+    # Verificar se o cliente existe
+    db_cliente = db.query(models.Cliente).filter(models.Cliente.id == cliente_id).first()
+    if db_cliente is None:
+        return None
+    
+    update_data = cliente_data.model_dump(exclude_unset=True)
+    
+    if not update_data:
+        # Se não houver dados para atualizar, apenas retorne o cliente
+        return db_cliente
+    
+    # Realizar o update diretamente usando a query
+    db.query(models.Cliente).filter(models.Cliente.id == cliente_id).update(
+        update_data, synchronize_session="fetch"
+    )
+    
+    db.commit()
+    # Buscar o objeto atualizado para retornar
+    return db.query(models.Cliente).filter(models.Cliente.id == cliente_id).first()
+
+# Função para excluir um cliente
+def delete_cliente(db: Session, cliente_id: int):
+    db_cliente = db.query(models.Cliente).filter(models.Cliente.id == cliente_id).first()
+    if db_cliente is None:
+        return None
+    
+    db.delete(db_cliente)
+    db.commit()
+    return db_cliente
