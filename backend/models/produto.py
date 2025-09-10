@@ -1,5 +1,3 @@
-# models.py
-
 from sqlalchemy import Column, Integer, Numeric, String
 from ..database import Base
 
