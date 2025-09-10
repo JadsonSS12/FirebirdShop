@@ -99,8 +99,43 @@ O projeto usa um arquivo `.env` para configurações de conexão com o banco de 
    DB_PORT=3050
    DB_PATH=C:/firebird/data/shop.fdb
    DB_CHARSET=UTF8
+   
+3. **Crie um arquivo chamado database.py com o código a baixo e coloque ele dentro da pasta backend**
+
+   ```
+   import os
+from dotenv import load_dotenv
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+load_dotenv()
+
+# Database configuration, adjust according to your setup
+DB_USER = os.getenv("DB_USER", "SYSDBA")                    
+DB_PASSWORD = os.getenv("DB_PASSWORD", "masterkey")
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_PORT = os.getenv("DB_PORT", "3050")
+DB_PATH = os.getenv("DB_PATH", "/opt/firebird/data/shop.fdb")
+DB_CHARSET = os.getenv("DB_CHARSET", "UTF8")
+
+SQLALCHEMY_DATABASE_URL = f"firebird+fdb://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_PATH}?charset={DB_CHARSET}"
+
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+Base = declarative_base()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
    ```
 
+```
 ### Instalação e Configuração
 
 1. **Clone o repositório** (se ainda não o fez):
