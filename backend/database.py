@@ -11,7 +11,7 @@ load_dotenv()
 
 # Obtém variáveis de ambiente
 DB_USER = os.getenv("DB_USER", "SYSDBA")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "masterkey")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "2403")
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "3050")
 DB_PATH = os.getenv("DB_PATH", "/opt/firebird/data/shop.fdb")
