@@ -1,7 +1,5 @@
-# crud.py
-
 from sqlalchemy.orm import Session
-from . import models, schemas
+from .. import models, schemas
 
 # Função para buscar um produto por ID
 def get_produto(db: Session, produto_id: int):

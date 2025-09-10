@@ -1,7 +1,7 @@
 # models.py
 
 from sqlalchemy import Column, Integer, Numeric, String
-from .database import Base
+from ..database import Base
 
 class Produto(Base):
     __tablename__ = "PRODUTOS"
