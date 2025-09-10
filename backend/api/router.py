@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .endpoints import produto, cliente, cliente_telefone, cliente_email
+from .endpoints import produto, cliente, cliente_telefone, cliente_email, transportadora
 
 api_router = APIRouter()
 
@@ -7,3 +7,4 @@ api_router.include_router(produto.router)
 api_router.include_router(cliente.router)
 api_router.include_router(cliente_telefone.router)
 api_router.include_router(cliente_email.router)
+api_router.include_router(transportadora.router)
