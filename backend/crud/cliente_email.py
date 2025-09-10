@@ -21,7 +21,7 @@ def create_cliente_email(db: Session, cliente_email: schemas.ClienteEmailCreate)
     next_id = (last_id[0] if last_id else 0) + 1
     
     # Cria um dicionário dos dados
-    email_data = cliente_email.dict()
+    email_data = cliente_email.model_dump()
 
     # Adiciona o ID manualmente
     db_cliente_email = models.ClienteEmail(id=next_id, **email_data)

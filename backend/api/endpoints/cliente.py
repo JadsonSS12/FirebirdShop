@@ -11,16 +11,16 @@ router = APIRouter(
     tags=["Clientes"]
 )
 
-@router.post("/", response_model=schemas.Cliente, tags=["Clientes"])
+@router.post("/", response_model=schemas.Cliente)
 def criar_cliente(cliente: schemas.ClienteCreate, db: Session = Depends(get_db)):
     return create_cliente(db=db, cliente=cliente)
 
-@router.get("/", response_model=List[schemas.Cliente], tags=["Clientes"])
+@router.get("/", response_model=List[schemas.Cliente])
 def ler_clientes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     clientes = get_clientes(db, skip=skip, limit=limit)
     return clientes
 
-@router.get("/{cliente_id}", response_model=schemas.Cliente, tags=["Clientes"])
+@router.get("/{cliente_id}", response_model=schemas.Cliente)
 def ler_cliente(cliente_id: int, db: Session = Depends(get_db)):
     db_cliente = get_cliente(db, cliente_id=cliente_id)
     if db_cliente is None:
