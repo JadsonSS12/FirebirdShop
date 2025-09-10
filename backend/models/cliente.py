@@ -1,5 +1,3 @@
-# models.py
-
 from sqlalchemy import Column, Integer, Numeric, String, UniqueConstraint, CheckConstraint, func
 from ..database import Base
 
@@ -18,7 +16,7 @@ class Cliente(Base):
     numero = Column(String(10), nullable=False)
     
     __table_args__ = (
-        CheckConstraint(func.char_length(nome) >= 3, name="ck_nome_min_length"),
-        CheckConstraint(func.char_length(cpf_cnpj) >= 11, name="ck_cpf_cnpj_min_length"),
+        CheckConstraint(func.char_length(nome) >= 3, name="ck_cliente_nome_min_length"),
+        CheckConstraint(func.char_length(cpf_cnpj) >= 11, name="ck_cliente_cpf_cnpj_min_length"),
     )
     
