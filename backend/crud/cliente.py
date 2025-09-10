@@ -32,3 +32,4 @@ def create_cliente(db: Session, cliente: schemas.ClienteCreate):
     db.commit()
     db.refresh(db_cliente)
     return db_cliente
+

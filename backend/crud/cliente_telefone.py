@@ -1,15 +1,19 @@
 from sqlalchemy.orm import Session
 from .. import models, schemas
 
-# Função para buscar um cliente por ID
-def get_cliente_telefone(db: Session, cliente_telefone_id: int):
-    return db.query(models.ClienteTelefone).filter(models.ClienteTelefone.id == cliente_telefone_id).first()
-
-# Função para buscar uma lista de clientes
+# Função para buscar uma lista de todos os telefones de clientes
 def get_clientes_telefone(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.ClienteTelefone).offset(skip).limit(limit).all()
 
-# Função para criar um novo cliente
+# Função para buscar um telefone de cliente por ID
+def get_cliente_telefone(db: Session, cliente_telefone_id: int):
+    return db.query(models.ClienteTelefone).filter(models.ClienteTelefone.id == cliente_telefone_id).first()
+
+# Função para buscar todos os telefones de um cliente específico
+def get_cliente_telefones(db: Session, cliente_id: int):
+    return db.query(models.ClienteTelefone).filter(models.ClienteTelefone.cliente_id == cliente_id).all()
+
+# Função para criar um novo telefone de cliente
 def create_cliente_telefone(db: Session, cliente_telefone: schemas.ClienteTelefoneCreate):
      # ATENÇÃO: Gerenciamento manual do ID para este exemplo.
     # Em um sistema real, o ID viria de um Generator/Sequence.
