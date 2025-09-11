@@ -4,3 +4,5 @@ from .produto import Produto
 from .cliente_email import ClienteEmail
 from .cliente_telefone import ClienteTelefone
 from .transportadora import Transportadora
+from .transportadora_telefone import TransportadoraTelefone
+from .transportadora_email import TransportadoraEmail

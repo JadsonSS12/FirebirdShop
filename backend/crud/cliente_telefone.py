@@ -21,7 +21,7 @@ def create_cliente_telefone(db: Session, cliente_telefone: schemas.ClienteTelefo
     next_id = (last_id[0] if last_id else 0) + 1
     
     # Cria um dicionário dos dados
-    telefone_data = cliente_telefone.dict()
+    telefone_data = cliente_telefone.model_dump()
     
     # Adiciona o ID manualmente
     db_cliente_telefone = models.ClienteTelefone(id=next_id, **telefone_data)
