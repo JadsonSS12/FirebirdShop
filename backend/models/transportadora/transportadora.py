@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, Numeric, String, CheckConstraint, func
-from ..database import Base
+from ...database import Base
 
 class Transportadora(Base):
     __tablename__ = "TRANSPORTADORAS"
