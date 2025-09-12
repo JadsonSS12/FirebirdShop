@@ -1,0 +1,3 @@
+from .transportadora import Transportadora, TransportadoraBase, TransportadoraCreate, TransportadoraUpdate
+from .transportadora_telefone import TransportadoraTelefone, TransportadoraTelefoneBase, TransportadoraTelefoneCreate, TransportadoraTelefoneUpdate
+from .transportadora_email import TransportadoraEmail, TransportadoraEmailBase, TransportadoraEmailCreate, TransportadoraEmailUpdate

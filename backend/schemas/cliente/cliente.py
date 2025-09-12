@@ -15,20 +15,10 @@ class ClienteBase(BaseModel):
     numero: str
 
 # Schema para criação (usado no endpoint POST)
-# Não precisa de ID, pois o banco irá gerar
 class ClienteCreate(ClienteBase):
     pass
 
-# Schema para leitura (usado nos endpoints GET)
-# Inclui o ID e permite que o Pydantic leia dados do ORM
-class Cliente(ClienteBase):
-    id: int
-
-    class Config:
-        from_attributes = True # Antigo orm_mode = True
-
 # Schema para atualização (usado no endpoint PUT/PATCH)
-# Todos os campos são opcionais para permitir atualizações parciais
 class ClienteUpdate(BaseModel):
     nome: Optional[str] = None
     cpf_cnpj: Optional[str] = None
@@ -39,3 +29,11 @@ class ClienteUpdate(BaseModel):
     bairro: Optional[str] = None
     rua: Optional[str] = None
     numero: Optional[str] = None
+
+# Schema para leitura (usado nos endpoints GET)
+class Cliente(ClienteBase):
+    id: int
+
+    class Config:
+        from_attributes = True # Antigo orm_mode = True
+

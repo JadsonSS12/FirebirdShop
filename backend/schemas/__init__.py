@@ -1,7 +1,29 @@
-from .cliente import ClienteBase, ClienteCreate, ClienteUpdate, Cliente
-from .produto import ProdutoBase, ProdutoCreate, Produto
-from .cliente_email import ClienteEmailBase, ClienteEmailCreate, ClienteEmail, ClienteEmailUpdate
-from .cliente_telefone import ClienteTelefoneBase, ClienteTelefoneCreate, ClienteTelefone, ClienteTelefoneUpdate
-from .transportadora import TransportadoraBase, TransportadoraCreate, TransportadoraUpdate,Transportadora
-from .transportadora_telefone import TransportadoraTelefoneBase, TransportadoraTelefoneCreate, TransportadoraTelefone, TransportadoraTelefoneUpdate
-from .transportadora_email import TransportadoraEmailBase, TransportadoraEmailCreate, TransportadoraEmail, TransportadoraEmailUpdate
+from .armazem import Armazem, ArmazemCreate, ArmazemUpdate, ArmazemBase
+from .categoria import (
+    Categoria, CategoriaCreate, CategoriaUpdate, CategoriaBase,
+    CategoriaProduto, CategoriaProdutoCreate, CategoriaProdutoUpdate, CategoriaProdutoBase
+)
+from .cliente import (
+    Cliente, ClienteBase, ClienteCreate, ClienteUpdate,
+    ClienteEmail, ClienteEmailBase, ClienteEmailCreate, ClienteEmailUpdate,
+    ClienteTelefone, ClienteTelefoneBase, ClienteTelefoneCreate, ClienteTelefoneUpdate,
+)
+from .entrega import Entrega, EntregaCreate, EntregaUpdate, EntregaBase
+from .estoque import Estoque, EstoqueBase, EstoqueCreate, EstoqueUpdate
+from .fornecedor import (
+    Fornecedor, FornecedorCreate, FornecedorUpdate,
+    FornecedorProduto, FornecedorProdutoCreate, FornecedorProdutoUpdate
+)
+from .pedido import (
+    Pedido, PedidoCreate, PedidoUpdate, PedidoBase,
+    PedidoProduto, PedidoProdutoCreate, PedidoProdutoUpdate, PedidoProdutoBase
+)
+from .produto import (
+    Produto, ProdutoBase, ProdutoCreate, ProdutoUpdate,
+    ProdutoTraducao, ProdutoTraducaoBase, ProdutoTraducaoCreate, ProdutoTraducaoUpdate,
+)
+from .transportadora import (
+    Transportadora, TransportadoraBase, TransportadoraCreate, TransportadoraUpdate,
+    TransportadoraEmail, TransportadoraEmailBase, TransportadoraEmailCreate, TransportadoraEmailUpdate,
+    TransportadoraTelefone, TransportadoraTelefoneBase, TransportadoraTelefoneCreate, TransportadoraTelefoneUpdate,
+)
