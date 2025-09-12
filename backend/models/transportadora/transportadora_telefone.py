@@ -1,13 +1,13 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
-from ..database import Base
+from ...database import Base
 
-class ClienteTelefone(Base):
-    __tablename__ = "CLIENTES_TELEFONE"
+class TransportadoraTelefone(Base):
+    __tablename__ = "TRANSPORTADORA_TELEFONES"
 
     id = Column(Integer, primary_key=True, index=True)
-    cliente_id = Column(
+    transportadora_id = Column(
         Integer,
-        ForeignKey("CLIENTES.id", ondelete="CASCADE"), 
+        ForeignKey("TRANSPORTADORAS.id", ondelete="CASCADE"),
         nullable=False,
     )
     telefone = Column(String(15), nullable=False, unique=True)

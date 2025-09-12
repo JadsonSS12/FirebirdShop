@@ -1,8 +1,11 @@
 from ..database import Base
-from .cliente import Cliente
-from .produto import Produto
-from .cliente_email import ClienteEmail
-from .cliente_telefone import ClienteTelefone
-from .transportadora import Transportadora
-from .transportadora_telefone import TransportadoraTelefone
-from .transportadora_email import TransportadoraEmail
+from .armazem import Armazem
+from .categoria import Categoria, CategoriaProduto
+from .cliente import Cliente, ClienteEmail, ClienteTelefone
+from .entrega import Entrega
+from .estoque import Estoque
+from .fornecedor import Fornecedor, FornecedorProduto
+from .pedido import Pedido, PedidoProduto
+from .produto import Produto, ProdutoTraducao
+from .transportadora import Transportadora, TransportadoraTelefone, TransportadoraEmail
+

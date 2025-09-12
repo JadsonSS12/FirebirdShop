@@ -1,0 +1,3 @@
+from .transportadora import Transportadora
+from .transportadora_telefone import TransportadoraTelefone
+from .transportadora_email import TransportadoraEmail
