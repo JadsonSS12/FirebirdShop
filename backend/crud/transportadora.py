@@ -30,3 +30,27 @@ def create_transportadora(db: Session, transportadora: schemas.TransportadoraCre
     db.refresh(db_transportadora)
     return db_transportadora
 
+def update_transportadora(db: Session, transportadora_id: int, transportadora_data: schemas.TransportadoraUpdate):
+    db_transportadora = db.query(models.Transportadora).filter(models.Transportadora.id == transportadora_id).first()
+    if db_transportadora is None:
+        return None
+
+    update_data = transportadora_data.model_dump(exclude_unset=True)
+
+    if not update_data:
+        return db_transportadora
+
+    db.query(models.Transportadora).filter(models.Transportadora.id == transportadora_id).update(
+        update_data, synchronize_session="fetch"
+    )
+    
+    db.commit()
+    return db.query(models.Transportadora).filter(models.Transportadora.id == transportadora_id).first()
+
+def delete_transportadora(db: Session, transportadora_id: int):
+    db_transportadora = db.query(models.Transportadora).filter(models.Transportadora.id == transportadora_id).first()
+    if db_transportadora:
+        db.delete(db_transportadora)
+        db.commit()
+    return db_transportadora
+

@@ -29,3 +29,29 @@ def create_cliente_email(db: Session, cliente_email: schemas.ClienteEmailCreate)
     db.commit()
     db.refresh(db_cliente_email)
     return db_cliente_email
+
+def update_cliente_email(db: Session, cliente_email_id: int, cliente_email_data: schemas.ClienteEmailUpdate):
+    # Verificar se o email do cliente existe
+    db_cliente_email = db.query(models.ClienteEmail).filter(models.ClienteEmail.id == cliente_email_id).first()
+    if db_cliente_email is None:
+        return None
+    
+    update_data = cliente_email_data.model_dump(exclude_unset=True)
+    
+    if not update_data:
+        return db_cliente_email
+    
+    db.query(models.ClienteEmail).filter(models.ClienteEmail.id == cliente_email_id).update(
+        update_data, synchronize_session="fetch"
+    )
+    
+    db.commit()
+    return db.query(models.ClienteEmail).filter(models.ClienteEmail.id == cliente_email_id).first()
+
+
+def delete_cliente_email(db: Session, cliente_email_id: int):
+    db_cliente_email = db.query(models.ClienteEmail).filter(models.ClienteEmail.id == cliente_email_id).first()
+    if db_cliente_email:
+        db.delete(db_cliente_email)
+        db.commit()
+    return db_cliente_email

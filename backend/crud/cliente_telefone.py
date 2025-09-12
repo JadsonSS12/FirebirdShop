@@ -29,3 +29,27 @@ def create_cliente_telefone(db: Session, cliente_telefone: schemas.ClienteTelefo
     db.commit()
     db.refresh(db_cliente_telefone)
     return db_cliente_telefone
+
+def update_cliente_telefone(db: Session, cliente_telefone_id: int, cliente_telefone_data: schemas.ClienteTelefoneUpdate):
+    db_cliente_telefone = db.query(models.ClienteTelefone).filter(models.ClienteTelefone.id == cliente_telefone_id).first()
+    if db_cliente_telefone is None:
+        return None
+    
+    update_data = cliente_telefone_data.model_dump(exclude_unset=True)
+    
+    if not update_data:
+        return db_cliente_telefone
+    
+    db.query(models.ClienteTelefone).filter(models.ClienteTelefone.id == cliente_telefone_id).update(
+        update_data, synchronize_session="fetch"
+    )
+    
+    db.commit()
+    return db.query(models.ClienteTelefone).filter(models.ClienteTelefone.id == cliente_telefone_id).first()
+
+def delete_cliente_telefone(db: Session, cliente_telefone_id: int):
+    db_cliente_telefone = db.query(models.ClienteTelefone).filter(models.ClienteTelefone.id == cliente_telefone_id).first()
+    if db_cliente_telefone:
+        db.delete(db_cliente_telefone)
+        db.commit()
+    return db_cliente_telefone

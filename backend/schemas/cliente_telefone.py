@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from decimal import Decimal
+from typing import Optional
+
 
 class ClienteTelefoneBase(BaseModel):
     telefone: str
@@ -8,6 +9,10 @@ class ClienteTelefoneBase(BaseModel):
 
 class ClienteTelefoneCreate(ClienteTelefoneBase):
     pass
+
+
+class ClienteTelefoneUpdate(BaseModel):
+    telefone: Optional[str] = None
 
 
 class ClienteTelefone(ClienteTelefoneBase):

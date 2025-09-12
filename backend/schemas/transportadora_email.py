@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class TransportadoraEmailBase(BaseModel):
     email: str
@@ -7,6 +8,10 @@ class TransportadoraEmailBase(BaseModel):
 
 class TransportadoraEmailCreate(TransportadoraEmailBase):
     pass
+
+
+class TransportadoraEmailUpdate(BaseModel):
+    email: Optional[str] = None
 
 
 class TransportadoraEmail(TransportadoraEmailBase):
