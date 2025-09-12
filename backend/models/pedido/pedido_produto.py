@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Numeric, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, Numeric, ForeignKey
 from ...database import Base
 
 class PedidoProduto(Base):
