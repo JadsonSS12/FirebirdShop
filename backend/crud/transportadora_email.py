@@ -21,3 +21,28 @@ def create_transportadora_email(db: Session, transportadora_email: schemas.Trans
     db.commit()
     db.refresh(db_transportadora_email)
     return db_transportadora_email
+
+def update_transportadora_email(db: Session, transportadora_email_id: int, transportadora_email_data: schemas.TransportadoraEmailUpdate):
+    # Verificar se o email da transportadora existe
+    db_transportadora_email = db.query(models.TransportadoraEmail).filter(models.TransportadoraEmail.id == transportadora_email_id).first()
+    if db_transportadora_email is None:
+        return None
+
+    update_data = transportadora_email_data.model_dump(exclude_unset=True)
+
+    if not update_data:
+        return db_transportadora_email
+
+    db.query(models.TransportadoraEmail).filter(models.TransportadoraEmail.id == transportadora_email_id).update(
+        update_data, synchronize_session="fetch"
+    )
+    
+    db.commit()
+    return db.query(models.TransportadoraEmail).filter(models.TransportadoraEmail.id == transportadora_email_id).first()
+
+def delete_transportadora_email(db: Session, transportadora_email_id: int):
+    db_transportadora_email = db.query(models.TransportadoraEmail).filter(models.TransportadoraEmail.id == transportadora_email_id).first()
+    if db_transportadora_email:
+        db.delete(db_transportadora_email)
+        db.commit()
+    return db_transportadora_email

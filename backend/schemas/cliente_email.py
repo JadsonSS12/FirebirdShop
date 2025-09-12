@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class ClienteEmailBase(BaseModel):
     email: str
@@ -9,6 +10,10 @@ class ClienteEmailCreate(ClienteEmailBase):
     pass
 
 
+class ClienteEmailUpdate(BaseModel):
+    email: Optional[str] = None
+    
+    
 class ClienteEmail(ClienteEmailBase):
     id: int
 

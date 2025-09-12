@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from decimal import Decimal
+from typing import Optional
 
 class TransportadoraBase(BaseModel):
     nome: str
@@ -20,3 +20,15 @@ class Transportadora(TransportadoraBase):
     
     class Config:
         from_attributes = True 
+
+
+class TransportadoraUpdate(BaseModel):
+    nome: Optional[str] = None
+    nome_fantasia: Optional[str] = None
+    cnpj: Optional[str] = None
+    cep: Optional[str] = None
+    estado: Optional[str] = None
+    cidade: Optional[str] = None
+    bairro: Optional[str] = None
+    rua: Optional[str] = None
+    numero: Optional[str] = None

@@ -21,3 +21,27 @@ def create_transportadora_telefone(db: Session, transportadora_telefone: schemas
     db.commit()
     db.refresh(db_transportadora_telefone)
     return db_transportadora_telefone
+
+def update_transportadora_telefone(db: Session, transportadora_telefone_id: int, transportadora_telefone_data: schemas.TransportadoraTelefoneUpdate):
+    db_transportadora_telefone = db.query(models.TransportadoraTelefone).filter(models.TransportadoraTelefone.id == transportadora_telefone_id).first()
+    if db_transportadora_telefone is None:
+        return None
+    
+    update_data = transportadora_telefone_data.model_dump(exclude_unset=True)
+    
+    if not update_data:
+        return db_transportadora_telefone
+    
+    db.query(models.TransportadoraTelefone).filter(models.TransportadoraTelefone.id == transportadora_telefone_id).update(
+        update_data, synchronize_session="fetch"
+    )
+    
+    db.commit()
+    return db.query(models.TransportadoraTelefone).filter(models.TransportadoraTelefone.id == transportadora_telefone_id).first()
+
+def delete_transportadora_telefone(db: Session, transportadora_telefone_id: int):
+    db_transportadora_telefone = db.query(models.TransportadoraTelefone).filter(models.TransportadoraTelefone.id == transportadora_telefone_id).first()
+    if db_transportadora_telefone:
+        db.delete(db_transportadora_telefone)
+        db.commit()
+    return db_transportadora_telefone

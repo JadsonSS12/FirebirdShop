@@ -3,13 +3,15 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from ... import schemas
-from ...crud.cliente_telefone import create_cliente_telefone, get_clientes_telefone, get_cliente_telefone, get_cliente_telefones
+from ...crud.cliente_telefone import create_cliente_telefone, get_clientes_telefone, get_cliente_telefone, get_cliente_telefones, delete_cliente_telefone, update_cliente_telefone
 from ...database import get_db
 
 router = APIRouter(
     prefix="/clientes-telefone",
     tags=["Clientes-telefone"]
 )
+
+MSG_ERRO_404 = "Telefone não encontrado"
 
 @router.post("/", response_model=schemas.ClienteTelefone)
 def criar_cliente_telefone(cliente_telefone: schemas.ClienteTelefoneCreate, db: Session = Depends(get_db)):
@@ -24,12 +26,28 @@ def ler_clientes_telefone(skip: int = 0, limit: int = 100, db: Session = Depends
 def ler_cliente_telefone(cliente_telefone_id: int, db: Session = Depends(get_db)):
     db_cliente_telefone = get_cliente_telefone(db, cliente_telefone_id=cliente_telefone_id)
     if db_cliente_telefone is None:
-        raise HTTPException(status_code=404, detail="Telefone não encontrado")
+        raise HTTPException(status_code=404, detail=MSG_ERRO_404)
     return db_cliente_telefone
 
 @router.get("-cliente/{cliente_id}", response_model=List[schemas.ClienteTelefone])
 def ler_cliente_telefones(cliente_id: int, db: Session = Depends(get_db)):
     db_cliente_telefones = get_cliente_telefones(db, cliente_id=cliente_id)
     if db_cliente_telefones is None:
-        raise HTTPException(status_code=404, detail="Telefones não encontrados")
+        raise HTTPException(status_code=404, detail=MSG_ERRO_404)
     return db_cliente_telefones
+
+@router.put("/{cliente_telefone_id}", response_model=schemas.ClienteTelefone)
+def atualizar_cliente_telefone(cliente_telefone_id: int, cliente_telefone_data: schemas.ClienteTelefoneUpdate, db: Session = Depends(get_db)):
+    db_cliente_telefone = get_cliente_telefone(db, cliente_telefone_id=cliente_telefone_id)
+    if db_cliente_telefone is None:
+        raise HTTPException(status_code=404, detail=MSG_ERRO_404)
+    updated_cliente_telefone = update_cliente_telefone(db, cliente_telefone_id=cliente_telefone_id, cliente_telefone_data=cliente_telefone_data)
+    return updated_cliente_telefone
+
+@router.delete("/{cliente_telefone_id}", response_model=schemas.ClienteTelefone)
+def deletar_cliente_telefone(cliente_telefone_id: int, db: Session = Depends(get_db)):
+    db_cliente_telefone = get_cliente_telefone(db, cliente_telefone_id=cliente_telefone_id)
+    if db_cliente_telefone is None:
+        raise HTTPException(status_code=404, detail=MSG_ERRO_404)
+    deleted_cliente_telefone = delete_cliente_telefone(db, cliente_telefone_id=cliente_telefone_id)
+    return deleted_cliente_telefone
