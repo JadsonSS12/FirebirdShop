@@ -2,13 +2,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
-from ... import schemas
-from ...crud.produto import create_produto, get_produtos, get_produto, update_produto
-from ...database import get_db
+from .... import schemas
+from ....crud.produto import create_produto, get_produtos, get_produto, update_produto
+from ....database import get_db
 
 router = APIRouter(
-    prefix="/produtos",
-    tags=["Produtos"]
+    prefix="/produto",
+    tags=["Produto"]
 )
 
 @router.post("/", response_model=schemas.Produto)

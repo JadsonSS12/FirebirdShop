@@ -2,13 +2,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
-from ... import schemas
-from ...crud.cliente import create_cliente, get_clientes, get_cliente, update_cliente, delete_cliente
-from ...database import get_db
+from .... import schemas
+from ....crud.cliente import create_cliente, get_clientes, get_cliente, update_cliente, delete_cliente
+from ....database import get_db
 
 router = APIRouter(
-    prefix="/clientes",
-    tags=["Clientes"]
+    prefix="/cliente",
+    tags=["Cliente"]
 )
 
 @router.post("/", response_model=schemas.Cliente)

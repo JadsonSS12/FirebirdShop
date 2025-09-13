@@ -2,13 +2,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
-from ... import schemas
-from ...crud.transportadora import get_transportadora, get_transportadoras, create_transportadora, update_transportadora, delete_transportadora
-from ...database import get_db
+from .... import schemas
+from ....crud.transportadora import get_transportadora, get_transportadoras, create_transportadora, update_transportadora, delete_transportadora
+from ....database import get_db
 
 router = APIRouter(
-    prefix="/transportadoras",
-    tags=["Transportadoras"]
+    prefix="/transportadora",
+    tags=["Transportadora"]
 )
 
 MSG_404 = "Transportadora não encontrada"

@@ -2,15 +2,15 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
-from ... import schemas
-from ...crud.transportadora import (
+from .... import schemas
+from ....crud.transportadora import (
     get_transportadora_telefone, get_transportadora_telefones, get_transportadoras_telefone, 
     create_transportadora_telefone, delete_transportadora_telefone, update_transportadora_telefone)
-from ...database import get_db
+from ....database import get_db
 
 router = APIRouter(
-    prefix="/transportadoras-telefone",
-    tags=["Transportadoras-telefone"]
+    prefix="/transportadora-telefone",
+    tags=["Transportadora-telefone"]
 )
 
 MSG_ERRO_404 = "Telefone não encontrado"
