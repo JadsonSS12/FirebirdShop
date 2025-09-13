@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from ... import schemas
-from ...crud.transportadora_email import get_transportadora_email, get_transportadora_emails, get_transportadoras_email , create_transportadora_email, delete_transportadora_email, update_transportadora_email
+from ...crud.transportadora import get_transportadora_email, get_transportadora_emails, get_transportadoras_email , create_transportadora_email, delete_transportadora_email, update_transportadora_email
 from ...database import get_db
 
 router = APIRouter(
