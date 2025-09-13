@@ -2,15 +2,15 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
-from ... import schemas
-from ...crud.cliente import (
+from .... import schemas
+from ....crud.cliente import (
     create_cliente_email, get_cliente_email, get_cliente_emails, update_cliente_email, delete_cliente_email, get_clientes_email
     )
-from ...database import get_db
+from ....database import get_db
 
 router = APIRouter(
-    prefix="/clientes-email",
-    tags=["Clientes-email"]
+    prefix="/cliente-email",
+    tags=["Cliente-email"]
 )
 
 MSG_ERRO_404 = "Email não encontrado"
