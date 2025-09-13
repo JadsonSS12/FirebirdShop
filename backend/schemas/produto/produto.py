@@ -3,7 +3,9 @@ from decimal import Decimal
 from datetime import date 
 from typing import Optional
 
+
 class ProdutoBase(BaseModel):
+    fornecedor_id: int 
     status: str
     preco_minimo: Decimal
     preco_venda: Decimal
@@ -13,6 +15,7 @@ class ProdutoCreate(ProdutoBase):
     pass
 
 class ProdutoUpdate(BaseModel):
+    fornecedor_id: Optional[int] = None
     status: Optional[str] = None
     preco_minimo: Optional[Decimal] = None
     preco_venda: Optional[Decimal] = None

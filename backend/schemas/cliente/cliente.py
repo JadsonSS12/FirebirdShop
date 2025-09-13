@@ -1,3 +1,4 @@
+from datetime import date
 from pydantic import BaseModel
 from decimal import Decimal
 from typing import Optional
@@ -7,12 +8,15 @@ class ClienteBase(BaseModel):
     nome: str
     cpf_cnpj: str
     limite_de_credito: Decimal
+    pais: str
+    data_cadastro: date
     cep: str
     estado: str
     cidade: str
     bairro: str
     rua: str
     numero: str
+    complemento: Optional[str] = None
 
 # Schema para criação (usado no endpoint POST)
 class ClienteCreate(ClienteBase):
@@ -23,12 +27,14 @@ class ClienteUpdate(BaseModel):
     nome: Optional[str] = None
     cpf_cnpj: Optional[str] = None
     limite_de_credito: Optional[Decimal] = None
+    pais: Optional[str] = None
     cep: Optional[str] = None
     estado: Optional[str] = None
     cidade: Optional[str] = None
     bairro: Optional[str] = None
     rua: Optional[str] = None
     numero: Optional[str] = None
+    complemento: Optional[str] = None
 
 # Schema para leitura (usado nos endpoints GET)
 class Cliente(ClienteBase):

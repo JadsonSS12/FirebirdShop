@@ -17,6 +17,7 @@ def create_entrega(db: Session, entrega: schemas.EntregaCreate):
         transportadora_id=entrega.transportadora_id,
         prazo=entrega.prazo,
         preco=entrega.preco,
+        status=entrega.status,
         cep=entrega.cep,
         estado=entrega.estado,
         cidade=entrega.cidade,

@@ -21,6 +21,8 @@ def create_cliente(db: Session, cliente: schemas.ClienteCreate):
         nome=cliente.nome,
         cpf_cnpj=cliente.cpf_cnpj,
         limite_de_credito=cliente.limite_de_credito,
+        data_cadastro=cliente.data_cadastro,
+        pais=cliente.pais,
         cep=cliente.cep,
         estado=cliente.estado,
         cidade=cliente.cidade,
