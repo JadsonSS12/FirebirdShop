@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from .. import models, schemas
+from backend import models, schemas
 
 # Função para buscar uma lista de emails dos clientes
 def get_clientes_email(db: Session, skip: int = 0, limit: int = 100):

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from .. import models, schemas
+from backend import models, schemas
 
 # Função para buscar um cliente por ID
 def get_cliente(db: Session, cliente_id: int):

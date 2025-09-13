@@ -3,7 +3,9 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from ... import schemas
-from ...crud.transportadora_telefone import get_transportadora_telefone, get_transportadora_telefones, get_transportadoras_telefone, create_transportadora_telefone, delete_transportadora_telefone, update_transportadora_telefone
+from ...crud.transportadora import (
+    get_transportadora_telefone, get_transportadora_telefones, get_transportadoras_telefone, 
+    create_transportadora_telefone, delete_transportadora_telefone, update_transportadora_telefone)
 from ...database import get_db
 
 router = APIRouter(

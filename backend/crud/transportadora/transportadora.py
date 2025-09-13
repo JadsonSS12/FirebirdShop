@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from .. import models, schemas
+from ... import models, schemas
 
 def get_transportadora(db: Session, transportadora_id: int):
     return db.query(models.Transportadora).filter(models.Transportadora.id == transportadora_id).first()
