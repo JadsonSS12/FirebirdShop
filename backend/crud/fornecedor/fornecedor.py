@@ -17,7 +17,7 @@ def create_fornecedor(db: Session, fornecedor: schemas.FornecedorCreate):
         cpf_cnpj=fornecedor.cpf_cnpj,
         pais=fornecedor.pais,
         estado=fornecedor.estado,
-        cidade=fornecedor,
+        cidade=fornecedor.cidade,
         bairro=fornecedor.bairro,
         rua=fornecedor.rua,
         numero=fornecedor.numero,

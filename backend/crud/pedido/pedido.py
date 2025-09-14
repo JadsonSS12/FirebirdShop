@@ -16,7 +16,7 @@ def create_pedido(db: Session, pedido: schemas.PedidoCreate):
         cliente_id=pedido.cliente_id,
         data_pedido=pedido.data_pedido,
         data_prazo_entrega=pedido.data_prazo_entrega,
-        modo_encomenda=pedido.modo_encomenda.value,
+        modo_encomenda=pedido.modo_encomenda,
         status=pedido.status,
         preco_total=pedido.preco_total,
     )

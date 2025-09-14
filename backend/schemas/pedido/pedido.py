@@ -14,6 +14,7 @@ class PedidoBase(BaseModel):
     data_prazo_entrega: date
     status: str
     preco_total: Decimal
+    modo_encomenda: ModoEncomendaEnum
 
 class PedidoCreate(PedidoBase):
     pass
@@ -21,6 +22,9 @@ class PedidoCreate(PedidoBase):
 class PedidoUpdate(BaseModel):
     status: Optional[str] = None
     preco_total: Optional[Decimal] = None
+    modo_encomenda: Optional[ModoEncomendaEnum] = None
+    data_pedido: Optional[date] = None
+    data_prazo_entrega: Optional[date] = None
 
 class Pedido(PedidoBase):
     id: int

@@ -11,6 +11,7 @@ class ProdutoBase(BaseModel):
     preco_minimo: Decimal
     preco_venda: Decimal
     data_garantia: date
+    fornecedor_id: int
 
 class ProdutoCreate(ProdutoBase):
     pass
@@ -22,6 +23,7 @@ class ProdutoUpdate(BaseModel):
     preco_minimo: Optional[Decimal] = None
     preco_venda: Optional[Decimal] = None
     data_garantia: Optional[date] = None
+    fornecedor_id: Optional[int] = None
 
 class Produto(ProdutoBase):
     id: int
