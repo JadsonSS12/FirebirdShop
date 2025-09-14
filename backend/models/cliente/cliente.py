@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Numeric, Date, String, CheckConstraint, func
+from sqlalchemy import Column, Integer, Numeric, DateTime, String, CheckConstraint, func
 from ...database import Base
 
 class Cliente(Base):
@@ -8,7 +8,7 @@ class Cliente(Base):
     nome = Column(String(50), nullable=False) 
     cpf_cnpj = Column(String(14), nullable=False, unique=True) 
     limite_de_credito = Column(Numeric(11, 2), nullable=False)
-    data_cadastro = Column(Date, nullable=False, server_default=func.now())
+    data_cadastro = Column(DateTime, nullable=False, server_default=func.now())
     pais = Column(String(50), nullable=False)
     cep = Column(String(10), nullable=False) 
     estado = Column(String(20), nullable=False) 

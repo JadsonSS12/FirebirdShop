@@ -147,6 +147,8 @@ O projeto usa um arquivo `.env` para configurações de conexão com o banco de 
 
 3. **npm run dev**
 
+4. **npm install react-icons**
+
 ### Instalação e Configuração
 
 1. **Clone o repositório** (se ainda não o fez):
