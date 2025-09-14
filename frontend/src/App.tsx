@@ -1,13 +1,14 @@
-import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
-import ClientsPage from './pages/ClientsPage'; 
-/*import ProductsPage from './pages/ProductsPage';
-import SuppliersPage from './pages/SuppliersPage';*/
-import DashboardPage from './pages/DashboardPage';
-import MainLayout from './components/MainLayout';
-import './App.css';
-import AddClientPage from './pages/AddClientPage';
-import EditClientPage from './pages/EditClientPage';
+import React from "react";
+import { Routes, Route, Link } from "react-router-dom";
+import ClientsPage from "./pages/ClientsPage";
+import ProductPage from "./pages/ProductPage";
+import AddProductPage from "./pages/AddProductPage";
+import EditProductPage from "./pages/EditProductPage";
+import DashboardPage from "./pages/DashboardPage";
+import MainLayout from "./components/MainLayout";
+import "./App.css";
+import AddClientPage from "./pages/AddClientPage";
+import EditClientPage from "./pages/EditClientPage";
 
 const HomePage: React.FC = () => {
   return (
@@ -32,15 +33,17 @@ const App: React.FC = () => {
       <Routes>
         {/* Rota para a página inicial */}
         <Route element={<MainLayout />}>
-        <Route path="/" element={<HomePage />} />
-        
-        {/* Rota para a sua página de dashboard */}
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/cliente" element={<ClientsPage />} />
-        <Route path="/cliente/novo" element={<AddClientPage />} />
-        <Route path="/clientes/editar/:id" element={<EditClientPage />} />
-        {/*<Route path="/produtos" element={<ProductsPage />} />
-        <Route path="/fornecedores" element={<SuppliersPage />} />*/}
+          <Route path="/" element={<HomePage />} />
+
+          {/* Rota para a sua página de dashboard */}
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/cliente" element={<ClientsPage />} />
+          <Route path="/cliente/novo" element={<AddClientPage />} />
+          <Route path="/clientes/editar/:id" element={<EditClientPage />} />
+          {/* Product CRUD routes */}
+          <Route path="/produtos" element={<ProductPage />} />
+          <Route path="/produtos/novo" element={<AddProductPage />} />
+          <Route path="/produtos/editar/:id" element={<EditProductPage />} />
         </Route>
       </Routes>
     </div>
@@ -48,4 +51,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-

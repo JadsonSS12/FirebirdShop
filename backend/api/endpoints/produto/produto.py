@@ -33,3 +33,12 @@ def atualizar_produto(produto_id: int, produto: schemas.ProdutoCreate, db: Sessi
     if db_produto is None:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
     return db_produto
+
+@router.delete("/{produto_id}")
+def deletar_produto(produto_id: int, db: Session = Depends(get_db)):
+    db_produto = get_produto(db, produto_id=produto_id)
+    if db_produto is None:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
+    db.delete(db_produto)
+    db.commit()
+    return {"detail": "Produto deletado com sucesso"}
