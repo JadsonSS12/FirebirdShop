@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import KpiCard from '../components/KsiCard';
 import './DashboardPage.css';
+import { Link } from 'react-router-dom';
 import { FaShoppingCart, FaReceipt, FaBoxOpen, FaUserFriends, FaTruck } from 'react-icons/fa';
 import ActionButton from '../components/ActionButton';
 
@@ -56,9 +57,15 @@ const DashboardPage: React.FC = () => {
               </div>
 
               <div className="action-grid">
-                <ActionButton label="Venda (PDV)" icon={<FaShoppingCart />} />
-                <ActionButton label="Cupom Fiscal" icon={<FaReceipt />} />
-                <ActionButton label="Produtos" icon={<FaBoxOpen />} />
+                <Link to="/produtos">
+                  <ActionButton label="Produtos" icon={<FaBoxOpen />} />
+                </Link>
+                <Link to="/clientes">
+                  <ActionButton label="Cliente" icon={<FaUserFriends />} />
+                </Link>
+                <Link to="/fornecedores">
+                  <ActionButton label="Fornecedor" icon={<FaTruck />} />
+                </Link>
                 <ActionButton label="Cliente" icon={<FaUserFriends />} />
               </div>
 
