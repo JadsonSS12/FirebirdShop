@@ -18,6 +18,7 @@ def create_produto(db: Session, produto: schemas.ProdutoCreate):
         preco_minimo=produto.preco_minimo,
         preco_venda=produto.preco_venda,
         data_garantia=produto.data_garantia,
+        fornecedor_id=produto.fornecedor_id
     )
     
     db.add(db_produto)
