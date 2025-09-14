@@ -16,6 +16,7 @@ from .endpoints.produto.produto_traducao import router as produto_traducao_route
 from .endpoints.transportadora.transportadora import router as transportadora_router
 from .endpoints.transportadora.transportadora_telefone import router as transportadora_telefone_router
 from .endpoints.transportadora.transportadora_email import router as transportadora_email_router
+from .endpoints.dashboard.dashboard import router as dashboard_router
 
 api_router = APIRouter()
 
@@ -36,3 +37,4 @@ api_router.include_router(cliente_email_router)
 api_router.include_router(transportadora_router)
 api_router.include_router(transportadora_email_router)
 api_router.include_router(transportadora_telefone_router)
+api_router.include_router(dashboard_router)

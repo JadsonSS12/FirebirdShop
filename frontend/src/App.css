@@ -1,42 +1,42 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* src/App.css */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+  --cor-fundo: #f4f7fa;
+  --cor-texto: #333;
+  --cor-verde: #28a745;
+  --cor-azul-claro: #eaf7ff;
+  --cor-azul-botao: #007bff;
+  --cor-sidebar: #2c3e50;
+  --sombra-card: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.dashboard-layout {
+  display: flex;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.sidebar {
+  width: 80px;
+  background-color: var(--cor-sidebar);
+  min-height: 100vh;
+  
 }
 
-.card {
-  padding: 2em;
+.main-content {
+  flex-grow: 1;
+  padding: 24px;
 }
 
-.read-the-docs {
-  color: #888;
+.header {
+  background-color: #fff;
+  padding: 16px 24px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 24px;
 }
