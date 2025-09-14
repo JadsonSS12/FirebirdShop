@@ -10,10 +10,7 @@ from .cliente import (
 )
 from .entrega import Entrega, EntregaCreate, EntregaUpdate, EntregaBase
 from .estoque import Estoque, EstoqueBase, EstoqueCreate, EstoqueUpdate
-from .fornecedor import (
-    Fornecedor, FornecedorCreate, FornecedorUpdate,
-    FornecedorProduto, FornecedorProdutoCreate, FornecedorProdutoUpdate
-)
+from .fornecedor import  Fornecedor, FornecedorCreate, FornecedorUpdate, FornecedorBase
 from .pedido import (
     Pedido, PedidoCreate, PedidoUpdate, PedidoBase,
     PedidoProduto, PedidoProdutoCreate, PedidoProdutoUpdate, PedidoProdutoBase

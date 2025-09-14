@@ -14,10 +14,8 @@ from .entrega import (
 from .estoque import (
     get_estoque, get_estoques, create_estoque, update_estoque, delete_estoque
 )
-from .fornecedor import (
-    get_fornecedor, get_fornecedores, create_fornecedor, update_fornecedor, delete_fornecedor,
-    get_fornecedor_produto, get_fornecedores_produto, create_fornecedor_produto, update_fornecedor_produto, delete_fornecedor_produto
-)
+from .fornecedor import get_fornecedor, get_fornecedores, create_fornecedor, update_fornecedor, delete_fornecedor
+
 from .pedido import (
     get_pedido, get_pedidos, create_pedido, update_pedido, delete_pedido,
     get_pedido_produtos, create_pedido_produto, delete_pedido_produto, update_pedido_produto

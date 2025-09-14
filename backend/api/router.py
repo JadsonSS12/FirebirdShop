@@ -9,7 +9,6 @@ from .endpoints.cliente.cliente_email import router as cliente_email_router
 from .endpoints.entrega.entrega import router as entrega_router
 from .endpoints.estoque.estoque import router as estoque_router
 from .endpoints.fornecedor.fornecedor import router as fornecedor_router
-from .endpoints.fornecedor.fornecedor_produto import router as fornecedor_produto_router
 from .endpoints.pedido.pedido import router as pedido_router 
 from .endpoints.pedido.pedido_produto import router as pedido_produto_router
 from .endpoints.produto.produto import router as produto_router
@@ -27,7 +26,6 @@ api_router.include_router(categoria_produto_router)
 api_router.include_router(entrega_router)
 api_router.include_router(estoque_router)
 api_router.include_router(fornecedor_router)
-api_router.include_router(fornecedor_produto_router)
 api_router.include_router(pedido_router)
 api_router.include_router(pedido_produto_router)
 api_router.include_router(produto_router)

@@ -1,2 +1,1 @@
 from .fornecedor import get_fornecedor, get_fornecedores, create_fornecedor, update_fornecedor, delete_fornecedor
-from .fornecedor_produto import get_fornecedor_produto, get_fornecedores_produto, create_fornecedor_produto, update_fornecedor_produto, delete_fornecedor_produto
