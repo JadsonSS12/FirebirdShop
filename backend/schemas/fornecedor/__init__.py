@@ -1,2 +1,1 @@
-from .fornecedor import Fornecedor, FornecedorCreate, FornecedorUpdate
-from .fornecedor_produto import FornecedorProduto, FornecedorProdutoCreate, FornecedorProdutoUpdate
+from .fornecedor import Fornecedor, FornecedorCreate, FornecedorUpdate, FornecedorBase
