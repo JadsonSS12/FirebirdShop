@@ -137,6 +137,16 @@ O projeto usa um arquivo `.env` para configurações de conexão com o banco de 
    ```
 
 
+## Configuração do Frontend
+
+### Execute os seguintes comandos dentro da pasta frontend:
+
+1. **npm install**
+
+2. **npm install axios**
+
+3. **npm run dev**
+
 ### Instalação e Configuração
 
 1. **Clone o repositório** (se ainda não o fez):

@@ -5,6 +5,7 @@ class Produto(Base):
     __tablename__ = "PRODUTOS"
 
     id = Column(Integer, primary_key=True, index=True)
+    nome = Column(String(40))
     status = Column(String(20))  
     preco_minimo = Column(Numeric(10, 2), nullable=False)
     preco_venda = Column(Numeric(10, 2), nullable=False)

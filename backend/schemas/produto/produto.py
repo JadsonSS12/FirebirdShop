@@ -5,6 +5,7 @@ from typing import Optional
 
 
 class ProdutoBase(BaseModel):
+    nome: str
     fornecedor_id: int 
     status: str
     preco_minimo: Decimal
@@ -15,6 +16,7 @@ class ProdutoCreate(ProdutoBase):
     pass
 
 class ProdutoUpdate(BaseModel):
+    nome: Optional[str] = None
     fornecedor_id: Optional[int] = None
     status: Optional[str] = None
     preco_minimo: Optional[Decimal] = None
