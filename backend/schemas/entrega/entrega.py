@@ -4,10 +4,12 @@ from typing import Optional
 from datetime import date
 
 class EntregaBase(BaseModel):
+    id: int
     pedido_id : int
     transportadora_id : int
     prazo : date
     preco : Decimal
+    status: str
     cep : str
     estado : str
     cidade : str
@@ -21,10 +23,12 @@ class EntregaCreate(EntregaBase):
 
 
 class EntregaUpdate(BaseModel):
+    id: Optional[int] = None
     pedido_id : Optional[int] = None
     transportadora_id : Optional[int] = None
     prazo : Optional[date] = None
     preco : Optional[Decimal] = None
+    status: Optional[str] = None
     cep : Optional[str] = None
     estado : Optional[str] = None
     cidade : Optional[str] = None

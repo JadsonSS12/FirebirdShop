@@ -9,6 +9,7 @@ class Entrega(Base):
     transportadora_id = Column(Integer, ForeignKey("TRANSPORTADORAS.id", ondelete="CASCADE"), nullable=False)
     prazo = Column(DateTime, nullable=False)
     preco = Column(Numeric(11, 2), nullable=False)
+    status = Column(String(30), nullable=False)
     cep = Column(String(10), nullable=False) 
     estado = Column(String(20), nullable=False) 
     cidade = Column(String(20), nullable=False) 
