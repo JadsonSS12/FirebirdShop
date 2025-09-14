@@ -33,16 +33,9 @@ app.include_router(api_router)
 @app.get("/reset-db/")
 def reset_db():
     try:
-        engine.dispose()
-        
-        from sqlalchemy import create_engine
-        from .database import SQLALCHEMY_DATABASE_URL
-        reset_engine = create_engine(SQLALCHEMY_DATABASE_URL)
-        models.Base.metadata.drop_all(bind=reset_engine)
-        models.Base.metadata.create_all(bind=reset_engine)
-        reset_engine.dispose()
-        
-        return {"message": "Database has been reset successfully."}
+        from .reset_db import reset_database
+        result = reset_database()
+        return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error resetting database: {str(e)}")
 
