@@ -13,11 +13,12 @@ def create_produto(db: Session, produto: schemas.ProdutoCreate):
 
     db_produto = models.Produto(
         id=next_id,
-        nopme=produto.nome,
+        nome=produto.nome,
         status=produto.status,
         preco_minimo=produto.preco_minimo,
         preco_venda=produto.preco_venda,
         data_garantia=produto.data_garantia,
+        fornecedor_id=produto.fornecedor_id
     )
     
     db.add(db_produto)
