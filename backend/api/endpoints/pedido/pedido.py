@@ -30,7 +30,7 @@ def ler_pedido(pedido_id: int, db: Session = Depends(get_db)):
 
 @router.put("/{pedido_id}", response_model=schemas.Pedido)
 def atualizar_pedido(pedido_id: int, pedido_data: schemas.PedidoUpdate, db: Session = Depends(get_db)):
-    return update_pedido(db=db, pedido_id=pedido_id, pedido_data=pedido_data)
+    return update_pedido(db=db, pedido_id=pedido_id, pedido=pedido_data)
 
 @router.delete("/{pedido_id}", response_model=schemas.Pedido)
 def deletar_pedido(pedido_id: int, db: Session = Depends(get_db)):

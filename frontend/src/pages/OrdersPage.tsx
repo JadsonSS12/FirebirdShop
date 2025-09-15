@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DataTable from '../components/DataTable';
-import { useNavigate } from 'react-router-dom';
 import './CrudPage.css';
 
 interface Pedido {
@@ -57,12 +56,25 @@ const OrdersPage: React.FC = () => {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [editingPedido, setEditingPedido] = useState<Pedido | null>(null);
   const [formData, setFormData] = useState(initialFormState);
-  const navigate = useNavigate();
 
   const handleEdit = (id: number) => {
-    navigate(`/pedido/editar/${id}`);
-  }
+    const pedido = pedidosWithClientName.find(p => p.id === id);
+    if (pedido) {
+      setEditingPedido(pedido);
+      setFormData({
+        cliente_id: pedido.cliente_id,
+        data_pedido: pedido.data_pedido,
+        data_prazo_entrega: pedido.data_prazo_entrega,
+        modo_encomenda: pedido.modo_encomenda as "Presencial" | "Online",
+        status: pedido.status,
+        preco_total: pedido.preco_total,
+        produtos: [], // We'll need to fetch products separately for editing
+      });
+      setShowForm(true);
+    }
+  };
 
   const handleDelete = (id: number) => {
     if (window.confirm('Tem certeza que deseja excluir este pedido?')) {
@@ -219,66 +231,85 @@ const OrdersPage: React.FC = () => {
       return;
     }
 
-    if (formData.produtos.length === 0) {
+    if (!editingPedido && formData.produtos.length === 0) {
       alert("Por favor, adicione pelo menos um produto ao pedido");
       return;
     }
 
-    // Validate all products have valid data
-    for (let i = 0; i < formData.produtos.length; i++) {
-      const produto = formData.produtos[i];
-      if (!produto.produto_id || produto.produto_id === 0) {
-        alert(`Por favor, selecione um produto na linha ${i + 1}`);
-        return;
-      }
-      if (produto.quantidade <= 0) {
-        alert(`Por favor, informe uma quantidade válida na linha ${i + 1}`);
-        return;
-      }
-      if (produto.preco_unitario <= 0) {
-        alert(`Por favor, informe um preço unitário válido na linha ${i + 1}`);
-        return;
+    // Validate all products have valid data (only for new orders)
+    if (!editingPedido) {
+      for (let i = 0; i < formData.produtos.length; i++) {
+        const produto = formData.produtos[i];
+        if (!produto.produto_id || produto.produto_id === 0) {
+          alert(`Por favor, selecione um produto na linha ${i + 1}`);
+          return;
+        }
+        if (produto.quantidade <= 0) {
+          alert(`Por favor, informe uma quantidade válida na linha ${i + 1}`);
+          return;
+        }
+        if (produto.preco_unitario <= 0) {
+          alert(`Por favor, informe um preço unitário válido na linha ${i + 1}`);
+          return;
+        }
       }
     }
 
     try {
-      // Create the order first
-      const orderData = {
-        cliente_id: formData.cliente_id,
-        data_pedido: formData.data_pedido,
-        data_prazo_entrega: formData.data_prazo_entrega,
-        modo_encomenda: formData.modo_encomenda,
-        status: formData.status,
-        preco_total: formData.preco_total
-      };
-
-      const orderResponse = await axios.post("http://127.0.0.1:8000/pedido/", orderData);
-      const orderId = orderResponse.data.id;
-
-      // Then create the order products
-      for (const produto of formData.produtos) {
-        const orderProductData = {
-          pedido_id: orderId,
-          produto_id: produto.produto_id,
-          quantidade: produto.quantidade,
-          preco_unitario: produto.preco_unitario,
-          preco_total: produto.preco_total
+      if (editingPedido) {
+        // Update existing order
+        const orderData = {
+          cliente_id: formData.cliente_id,
+          data_pedido: formData.data_pedido,
+          data_prazo_entrega: formData.data_prazo_entrega,
+          modo_encomenda: formData.modo_encomenda,
+          status: formData.status,
+          preco_total: formData.preco_total
         };
 
-        await axios.post("http://127.0.0.1:8000/pedido-produto/", orderProductData);
+        await axios.put(`http://127.0.0.1:8000/pedido/${editingPedido.id}`, orderData);
+        alert("Pedido atualizado com sucesso!");
+      } else {
+        // Create the order first
+        const orderData = {
+          cliente_id: formData.cliente_id,
+          data_pedido: formData.data_pedido,
+          data_prazo_entrega: formData.data_prazo_entrega,
+          modo_encomenda: formData.modo_encomenda,
+          status: formData.status,
+          preco_total: formData.preco_total
+        };
+
+        const orderResponse = await axios.post("http://127.0.0.1:8000/pedido/", orderData);
+        const orderId = orderResponse.data.id;
+
+        // Then create the order products
+        for (const produto of formData.produtos) {
+          const orderProductData = {
+            pedido_id: orderId,
+            produto_id: produto.produto_id,
+            quantidade: produto.quantidade,
+            preco_unitario: produto.preco_unitario,
+            preco_total: produto.preco_total
+          };
+
+          await axios.post("http://127.0.0.1:8000/pedido-produto/", orderProductData);
+        }
+        
+        alert("Pedido criado com sucesso!");
       }
       
       // Reset form and hide it
       setFormData(initialFormState);
+      setEditingPedido(null);
       setShowForm(false);
       
       // Refresh the data
       fetchData();
       
-      alert("Pedido criado com sucesso!");
     } catch (error: any) {
       alert(
-        `Erro ao criar pedido: ${
+        `Erro ao ${editingPedido ? 'atualizar' : 'criar'} pedido: ${
           error.response?.data?.detail || error.message
         }`
       );
@@ -287,6 +318,7 @@ const OrdersPage: React.FC = () => {
 
   const handleCancelForm = () => {
     setFormData(initialFormState);
+    setEditingPedido(null);
     setShowForm(false);
   };
 
@@ -324,7 +356,7 @@ const OrdersPage: React.FC = () => {
 
       {showForm && (
         <div className="form-section">
-          <h2>Criar Novo Pedido</h2>
+          <h2>{editingPedido ? 'Editar Pedido' : 'Criar Novo Pedido'}</h2>
           <form className="crud-form" onSubmit={handleFormSubmit}>
             <div className="form-grid">
               <div className="form-group">
@@ -411,105 +443,121 @@ const OrdersPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Products Section */}
-            <div className="form-section">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                <h3>Produtos do Pedido</h3>
-                <button
-                  type="button"
-                  className="btn-primary"
-                  onClick={addProduct}
-                >
-                  + Adicionar Produto
-                </button>
-              </div>
-
-              {formData.produtos.length === 0 && (
-                <p style={{ color: '#6c757d', textAlign: 'center', padding: '20px' }}>
-                  Nenhum produto adicionado. Clique em "Adicionar Produto" para começar.
-                </p>
-              )}
-
-              {formData.produtos.map((produto, index) => (
-                <div key={index} style={{ 
-                  border: '1px solid #dee2e6', 
-                  borderRadius: '5px', 
-                  padding: '15px', 
-                  marginBottom: '10px',
-                  backgroundColor: '#fff'
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'between', alignItems: 'center', marginBottom: '10px' }}>
-                    <h4 style={{ margin: '0', color: '#495057' }}>Produto {index + 1}</h4>
-                    <button
-                      type="button"
-                      onClick={() => removeProduct(index)}
-                      style={{
-                        backgroundColor: '#dc3545',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '3px',
-                        padding: '5px 10px',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      Remover
-                    </button>
-                  </div>
-                  
-                  <div className="form-grid" style={{ gridTemplateColumns: '2fr 1fr 1fr 1fr' }}>
-                    <div className="form-group">
-                      <label>Produto</label>
-                      <select
-                        value={produto.produto_id}
-                        onChange={(e) => updateProduct(index, 'produto_id', Number(e.target.value))}
-                        required
-                      >
-                        <option value={0}>Selecione um produto</option>
-                        {produtos.map((p) => (
-                          <option key={p.id} value={p.id}>
-                            {p.nome}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    
-                    <div className="form-group">
-                      <label>Quantidade</label>
-                      <input
-                        type="number"
-                        min="1"
-                        value={produto.quantidade}
-                        onChange={(e) => updateProduct(index, 'quantidade', Number(e.target.value))}
-                        required
-                      />
-                    </div>
-                    
-                    <div className="form-group">
-                      <label>Preço Unitário</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        value={produto.preco_unitario}
-                        onChange={(e) => updateProduct(index, 'preco_unitario', Number(e.target.value))}
-                        required
-                      />
-                    </div>
-                    
-                    <div className="form-group">
-                      <label>Total</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={produto.preco_total}
-                        readOnly
-                        style={{ backgroundColor: '#f8f9fa' }}
-                      />
-                    </div>
-                  </div>
+            {/* Products Section - Only shown for new orders */}
+            {!editingPedido && (
+              <div className="form-section">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                  <h3>Produtos do Pedido</h3>
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={addProduct}
+                  >
+                    + Adicionar Produto
+                  </button>
                 </div>
-              ))}
-            </div>
+
+                {formData.produtos.length === 0 && (
+                  <p style={{ color: '#6c757d', textAlign: 'center', padding: '20px' }}>
+                    Nenhum produto adicionado. Clique em "Adicionar Produto" para começar.
+                  </p>
+                )}
+
+                {formData.produtos.map((produto, index) => (
+                  <div key={index} style={{ 
+                    border: '1px solid #dee2e6', 
+                    borderRadius: '5px', 
+                    padding: '15px', 
+                    marginBottom: '10px',
+                    backgroundColor: '#fff'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'between', alignItems: 'center', marginBottom: '10px' }}>
+                      <h4 style={{ margin: '0', color: '#495057' }}>Produto {index + 1}</h4>
+                      <button
+                        type="button"
+                        onClick={() => removeProduct(index)}
+                        style={{
+                          backgroundColor: '#dc3545',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '3px',
+                          padding: '5px 10px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Remover
+                      </button>
+                    </div>
+                    
+                    <div className="form-grid" style={{ gridTemplateColumns: '2fr 1fr 1fr 1fr' }}>
+                      <div className="form-group">
+                        <label>Produto</label>
+                        <select
+                          value={produto.produto_id}
+                          onChange={(e) => updateProduct(index, 'produto_id', Number(e.target.value))}
+                          required
+                        >
+                          <option value={0}>Selecione um produto</option>
+                          {produtos.map((p) => (
+                            <option key={p.id} value={p.id}>
+                              {p.nome}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      
+                      <div className="form-group">
+                        <label>Quantidade</label>
+                        <input
+                          type="number"
+                          min="1"
+                          value={produto.quantidade}
+                          onChange={(e) => updateProduct(index, 'quantidade', Number(e.target.value))}
+                          required
+                        />
+                      </div>
+                      
+                      <div className="form-group">
+                        <label>Preço Unitário</label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          value={produto.preco_unitario}
+                          onChange={(e) => updateProduct(index, 'preco_unitario', Number(e.target.value))}
+                          required
+                        />
+                      </div>
+                      
+                      <div className="form-group">
+                        <label>Total</label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={produto.preco_total}
+                          readOnly
+                          style={{ backgroundColor: '#f8f9fa' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Note for editing orders */}
+            {editingPedido && (
+              <div style={{ 
+                backgroundColor: '#fff3cd', 
+                border: '1px solid #ffeaa7', 
+                borderRadius: '5px', 
+                padding: '15px', 
+                marginBottom: '20px' 
+              }}>
+                <strong>Nota:</strong> Para editar os produtos deste pedido, use a funcionalidade específica de gestão de produtos por pedido.
+                Esta tela permite apenas editar as informações básicas do pedido.
+              </div>
+            )}
             
             <div className="form-actions">
               <button 
@@ -520,7 +568,7 @@ const OrdersPage: React.FC = () => {
                 Cancelar
               </button>
               <button type="submit" className="btn-primary">
-                Criar Pedido
+                {editingPedido ? 'Atualizar Pedido' : 'Criar Pedido'}
               </button>
             </div>
           </form>
