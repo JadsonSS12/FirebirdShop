@@ -2,8 +2,6 @@ import React from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import ClientsPage from "./pages/ClientsPage";
 import ProductPage from "./pages/ProductPage";
-import AddProductPage from "./pages/AddProductPage";
-import EditProductPage from "./pages/EditProductPage";
 import DashboardPage from "./pages/DashboardPage";
 import MainLayout from "./components/MainLayout";
 import "./App.css";
@@ -28,8 +26,6 @@ const App: React.FC = () => {
           <Route path="/cliente/novo" element={<AddClientPage />} />
           <Route path="/clientes/editar/:id" element={<EditClientPage />} />
           <Route path="/produtos" element={<ProductPage />} />
-          <Route path="/produtos/novo" element={<AddProductPage />} />
-          <Route path="/produtos/editar/:id" element={<EditProductPage />} />
           <Route path="/pedidos" element={<OrdersPage />} />
           <Route path="/fornecedores" element={<SupplierPage />} />
           <Route path="/fornecedores/novo" element={<AddSupplierPage />} />

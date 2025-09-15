@@ -12,7 +12,7 @@ router = APIRouter(
 )
 
 @router.post("/", response_model=schemas.ProdutoTraducao)
-def criar_produto_traducao(produto_traducao: schemas.ProdutoCreate, db: Session = Depends(get_db)):
+def criar_produto_traducao(produto_traducao: schemas.ProdutoTraducaoCreate, db: Session = Depends(get_db)):
     return create_produto_traducao(db=db, produto_traducao=produto_traducao)
 
 @router.get("/", response_model=List[schemas.ProdutoTraducao])
