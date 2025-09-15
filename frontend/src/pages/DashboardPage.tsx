@@ -64,7 +64,9 @@ const DashboardPage: React.FC = () => {
                 <Link to="/fornecedores">
                   <ActionButton label="Fornecedor" icon={<FaTruck />} />
                 </Link>
-                <ActionButton label="Cliente" icon={<FaUserFriends />} />
+                <Link to="/pedidos">
+                  <ActionButton label="Pedido" icon={<FaShoppingCart />} />
+                </Link>
               </div>
 
               <div className="upgrade-banner">

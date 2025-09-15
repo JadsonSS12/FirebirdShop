@@ -21,12 +21,27 @@ interface Client {
 }
 
 interface ClientWithDetails extends Client {
-  email?: string; // Email é opcional
+  emails: string[];
+  telefones: string[];
+  emails_formatted: string;
+  telefones_formatted: string;
 }
 
 const ClientsPage: React.FC = () => {
   const [clientsWithDetails, setClientsWithDetails] = useState<ClientWithDetails[]>([]);
   const navigate = useNavigate();
+
+  const formatEmails = (emails: string[]) => {
+    if (emails.length === 0) return 'N/A';
+    if (emails.length === 1) return emails[0];
+    return emails.join(', ');
+  };
+
+  const formatTelefones = (telefones: string[]) => {
+    if (telefones.length === 0) return 'N/A';
+    if (telefones.length === 1) return telefones[0];
+    return telefones.join(', ');
+  };
 
   const handleEdit = (id: number) => {
     navigate(`/cliente/editar/${id}`);
@@ -46,30 +61,43 @@ const ClientsPage: React.FC = () => {
  useEffect(() => {
     const fetchData = async () => {
       try {
-        const [clientsResponse, emailsResponse] = await Promise.all([
-          axios.get('http://127.0.0.1:8000/cliente/'), // Endpoint de clientes
-          axios.get('http://127.0.0.1:8000/cliente-email/') // Endpoint de emails
+        const [clientsResponse, emailsResponse, telefonesResponse] = await Promise.all([
+          axios.get('http://127.0.0.1:8000/cliente/'),
+          axios.get('http://127.0.0.1:8000/cliente-email/'),
+          axios.get('http://127.0.0.1:8000/cliente-telefone/')
         ]);
 
         const clients = clientsResponse.data;
         const emails = emailsResponse.data;
+        const telefones = telefonesResponse.data;
 
-        // Cria um mapa para acesso rápido aos emails por cliente_id
-        const emailMap = new Map<number, string>();
+        const emailMap = new Map<number, string[]>();
         emails.forEach((emailEntry: { cliente_id: number; email: string }) => {
-          // Se um cliente tiver múltiplos emails, pegará o último da lista
-          emailMap.set(emailEntry.cliente_id, emailEntry.email);
+          if (!emailMap.has(emailEntry.cliente_id)) {
+            emailMap.set(emailEntry.cliente_id, []);
+          }
+          emailMap.get(emailEntry.cliente_id)?.push(emailEntry.email);
         });
 
-        // Combina os dados
+        const telefoneMap = new Map<number, string[]>();
+        telefones.forEach((telefoneEntry: { cliente_id: number; telefone: string }) => {
+          if (!telefoneMap.has(telefoneEntry.cliente_id)) {
+            telefoneMap.set(telefoneEntry.cliente_id, []);
+          }
+          telefoneMap.get(telefoneEntry.cliente_id)?.push(telefoneEntry.telefone);
+        });
+
         const combinedData = clients.map((client: Client) => ({
           ...client,
-          email: emailMap.get(client.id) || 'N/A',
+          emails: emailMap.get(client.id) || [],
+          telefones: telefoneMap.get(client.id) || [],
+          emails_formatted: formatEmails(emailMap.get(client.id) || []),
+          telefones_formatted: formatTelefones(telefoneMap.get(client.id) || []),
         }));
 
         setClientsWithDetails(combinedData);
       } catch (error) {
-        console.error("Erro ao buscar clientes ou emails:", error);
+        console.error("Erro ao buscar clientes, emails ou telefones:", error);
       }
     };
 
@@ -81,7 +109,8 @@ const ClientsPage: React.FC = () => {
     { header: 'CPF/CNPJ', accessor: 'cpf_cnpj' },
     { header: 'País', accessor: 'pais' },
     { header: 'Cadastro', accessor: 'data_cadastro' },
-    { header: 'Email', accessor: 'email' },
+    { header: 'Emails', accessor: 'emails_formatted' },
+    { header: 'Telefones', accessor: 'telefones_formatted' },
     { header: 'CEP', accessor: 'cep' },
     { header: 'Estado', accessor: 'estado' },
     { header: 'Cidade', accessor: 'cidade' },

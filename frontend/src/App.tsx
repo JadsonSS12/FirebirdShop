@@ -6,10 +6,12 @@ import AddProductPage from "./pages/AddProductPage";
 import EditProductPage from "./pages/EditProductPage";
 import DashboardPage from "./pages/DashboardPage";
 import MainLayout from "./components/MainLayout";
+// import AddOrderPage from "./pages/AddOrderPage";
 import "./App.css";
 import AddClientPage from "./pages/AddClientPage";
 import EditClientPage from "./pages/EditClientPage";
 import HomePage from "./pages/HomePage";
+import OrdersPage from "./pages/OrdersPage";
 
 
 // O componente App agora define a estrutura das rotas
@@ -18,10 +20,6 @@ const App: React.FC = () => {
     <div>
       <Routes>
           <Route path="/" element={<HomePage />} />
-
-
-
-
           <Route element={<MainLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/cliente" element={<ClientsPage />} />
@@ -30,6 +28,7 @@ const App: React.FC = () => {
           <Route path="/produtos" element={<ProductPage />} />
           <Route path="/produtos/novo" element={<AddProductPage />} />
           <Route path="/produtos/editar/:id" element={<EditProductPage />} />
+          <Route path="/pedidos" element={<OrdersPage />} />
         </Route>
       </Routes>
     </div>

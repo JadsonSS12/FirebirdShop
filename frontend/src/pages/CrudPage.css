@@ -1,3 +1,4 @@
+/* frontend/src/pages/CrudPage.css */
 
 .crud-page { 
   padding: 24px; 
@@ -25,8 +26,8 @@
   border-radius: 8px;
   margin-bottom: 20px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  width: 100%;
-  box-sizing: border-box;
+  width: 100%; /* Adicionado para garantir a expansão */
+  box-sizing: border-box; /* Boa prática */
 }
 .action-bar input { width: 300px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
 
@@ -75,7 +76,7 @@
 .form-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* Cria 3 colunas */
-  gap: 20px;
+  gap: 20px; /* Espaçamento entre os campos */
   margin-bottom: 24px;
 }
 
@@ -85,7 +86,7 @@
 }
 
 .form-group.full-width {
-  grid-column: 1 / -1; 
+  grid-column: 1 / -1; /* Faz o campo ocupar a largura total */
 }
 
 .form-group label {
@@ -97,5 +98,74 @@
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-group select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.form-section {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 2px solid #007bff;
+}
+
+.form-section h2 {
+  margin: 0 0 20px 0;
+  color: #007bff;
+  font-size: 18px;
+}
+
+.form-section h3 {
+  margin: 0 0 15px 0;
+  color: #495057;
+  font-size: 16px;
+}
+
+.form-section h4 {
+  margin: 0;
+  color: #495057;
   font-size: 14px;
 }
