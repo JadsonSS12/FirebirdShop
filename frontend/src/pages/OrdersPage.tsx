@@ -40,9 +40,14 @@ interface PedidoWithClientName extends Pedido {
   cliente_nome: string;
 }
 
+  const getTodayDate = () => {
+  const today = new Date();
+  return today.toISOString().split('T')[0];
+};
+
 const initialFormState = {
   cliente_id: 0,
-  data_pedido: "",
+  data_pedido: getTodayDate(),
   data_prazo_entrega: "",
   modo_encomenda: "Presencial" as "Presencial" | "Online",
   status: "",
@@ -75,6 +80,7 @@ const OrdersPage: React.FC = () => {
       setShowForm(true);
     }
   };
+
 
   const handleDelete = (id: number) => {
     if (window.confirm('Tem certeza que deseja excluir este pedido?')) {
@@ -236,6 +242,17 @@ const OrdersPage: React.FC = () => {
       return;
     }
 
+     // Validar data de prazo de entrega
+    const today = new Date();
+    const prazoEntrega = new Date(formData.data_prazo_entrega);
+    today.setHours(0,0,0,0); // Ignora horário
+    prazoEntrega.setHours(0,0,0,0);
+
+    if (prazoEntrega < today) {
+      alert("A data de prazo de entrega não pode ser anterior à data de hoje.");
+      return;
+    }
+
     // Validate all products have valid data (only for new orders)
     if (!editingPedido) {
       for (let i = 0; i < formData.produtos.length; i++) {
@@ -347,7 +364,11 @@ const OrdersPage: React.FC = () => {
         <div className="header-actions">
           <button 
             className="btn-primary"
-            onClick={() => setShowForm(!showForm)}
+            onClick={() => {
+              setFormData(initialFormState)
+              setEditingPedido(null)
+              setShowForm(!showForm)
+            }}
           >
             {showForm ? 'Cancelar' : 'Adicionar Pedido'}
           </button>
@@ -386,6 +407,8 @@ const OrdersPage: React.FC = () => {
                   value={formData.data_pedido}
                   onChange={handleFormChange}
                   required
+                  readOnly
+                  style={{ backgroundColor: '#f8f9fa' }}
                 />
               </div>
               

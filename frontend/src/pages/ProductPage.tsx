@@ -264,6 +264,26 @@ const ProductPage: React.FC = () => {
     event.preventDefault();
     
     // Validate required fields
+
+
+  const garantiaDate = new Date(formData.data_garantia);
+  garantiaDate.setHours(0, 0, 0, 0);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+
+  if (garantiaDate < today) {
+    alert("A data de garantia deve ser no mínimo amanhã.");
+    return;
+  }
+
+   if (formData.preco_minimo > formData.preco_venda) {
+    alert("O preço mínimo deve ser menor ou igual ao preço de venda.");
+    return;
+  }
+
     if (!formData.nome.trim()) {
       alert("Por favor, informe o nome do produto");
       return;
