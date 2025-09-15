@@ -6,7 +6,6 @@ const MainLayout: React.FC = () => {
   return (
     <div className="dashboard-layout">
        <aside className="sidebar">
-        {/* 3. Adicione a estrutura de navegação */}
         <nav className="sidebar-nav">
           <ul>
             <li>
