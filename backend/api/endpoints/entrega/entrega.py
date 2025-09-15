@@ -29,7 +29,7 @@ def ler_entrega(entrega_id: int, db: Session = Depends(get_db)):
 
 @router.put("/{entrega_id}", response_model=schemas.Entrega)
 def atualizar_entrega(entrega_id: int, entrega_data: schemas.EntregaUpdate, db: Session = Depends(get_db)):
-    return update_entrega(db=db, entrega_id=entrega_id, entrega_data=entrega_data)
+    return update_entrega(db=db, entrega_id=entrega_id, entrega=entrega_data)
 
 @router.delete("/{entrega_id}", response_model=schemas.Entrega)
 def deletar_entrega(entrega_id: int, db: Session = Depends(get_db)):
