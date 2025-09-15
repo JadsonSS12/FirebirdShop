@@ -16,6 +16,8 @@ class Cliente(Base):
     bairro = Column(String(20), nullable=False) 
     rua = Column(String(30), nullable=False)
     numero = Column(String(10), nullable=False)
+    complemento = Column(String(50), nullable=True)
+
     
     __table_args__ = (
         CheckConstraint(func.char_length(nome) >= 3, name="ck_cliente_nome_min_length"),

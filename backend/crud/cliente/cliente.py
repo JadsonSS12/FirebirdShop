@@ -28,7 +28,8 @@ def create_cliente(db: Session, cliente: schemas.ClienteCreate):
         cidade=cliente.cidade,
         bairro=cliente.bairro,
         rua=cliente.rua,
-        numero=cliente.numero
+        numero=cliente.numero,
+        complemento=cliente.complemento
     )
     db.add(db_cliente)
     db.commit()
