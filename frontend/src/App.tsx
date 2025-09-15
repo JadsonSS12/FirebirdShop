@@ -14,6 +14,7 @@ import AddSupplierPage from "./pages/AddSupplierPage";
 import StoreroomPage from "./pages/StoreroomPage";
 import SupplyPage from "./pages/SupplyPage";
 import TransportadoraPage from "./pages/CarrierPage";
+import DeliveryPage from "./pages/DeliveryPage";
 
 const App: React.FC = () => {
   return (
@@ -32,6 +33,7 @@ const App: React.FC = () => {
           <Route path="/armazem" element={<StoreroomPage />} />
           <Route path="/estoque" element={<SupplyPage />} />
           <Route path="/transportadora" element={<TransportadoraPage />} />
+           <Route path="/entregas" element={<DeliveryPage />} />
         </Route>
       </Routes>
     </div>
