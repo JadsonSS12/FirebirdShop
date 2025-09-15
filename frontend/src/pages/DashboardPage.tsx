@@ -3,8 +3,7 @@ import axios from 'axios';
 import KpiCard from '../components/KsiCard';
 import './DashboardPage.css';
 import { Link } from 'react-router-dom';
-import { FaShoppingCart, FaReceipt, FaBoxOpen, FaUserFriends, FaTruck } from 'react-icons/fa';
-import ActionButton from '../components/ActionButton';
+import { FaShoppingCart, FaReceipt, FaBoxOpen, FaUserFriends, FaTruck, FaWarehouse } from 'react-icons/fa';
 
 
 // Interface para os dados que virão da API
@@ -41,43 +40,50 @@ const DashboardPage: React.FC = () => {
   }
 
   return (
-        <div className="dashboard-layout">
-      <div className="content-wrapper">
-        <main className="main-content">
-          {loading && <p>Carregando...</p>}
-          {data && (
-            <>
-              <div className="kpi-grid">
-                <KpiCard title="Produtos" value={data.total_produtos} color="teal" />
-                <KpiCard title="Pedidos no mês" value={data.total_pedidos} color="green" />
-                <KpiCard title="Clientes no mês" value={data.total_clientes} color="yellow" />
-                <KpiCard title="Entregas no mês" value={data.total_entregas} color="red" />
-              </div>
+    <div className="dashboard-page">
+      {loading && <p>Carregando...</p>}
+      {data && (
+        <>
+          <div className="kpi-grid">
+            <KpiCard title="Produtos" value={data.total_produtos} color="teal" />
+            <KpiCard title="Pedidos no mês" value={data.total_pedidos} color="green" />
+            <KpiCard title="Clientes no mês" value={data.total_clientes} color="yellow" />
+            <KpiCard title="Entregas no mês" value={data.total_entregas} color="red" />
+          </div>
 
-              <div className="action-grid">
-                <Link to="/produtos">
-                  <ActionButton label="Produtos" icon={<FaBoxOpen />} />
-                </Link>
-                <Link to="/cliente">
-                  <ActionButton label="Cliente" icon={<FaUserFriends />} />
-                </Link>
-                <Link to="/fornecedores">
-                  <ActionButton label="Fornecedor" icon={<FaTruck />} />
-                </Link>
-                <Link to="/pedidos">
-                  <ActionButton label="Pedido" icon={<FaShoppingCart />} />
-                </Link>
-              </div>
+          <div className="action-grid">
+            <Link to="/produtos" className="action-card">
+              <FaBoxOpen />
+              <h3>Produtos</h3>
+            </Link>
+            <Link to="/cliente" className="action-card">
+              <FaUserFriends />
+              <h3>Cliente</h3>
+            </Link>
+            <Link to="/fornecedores" className="action-card">
+              <FaTruck />
+              <h3>Fornecedor</h3>
+            </Link>
+            <Link to="/pedidos" className="action-card">
+              <FaShoppingCart />
+              <h3>Pedido</h3>
+            </Link>
+            <Link to="/armazem" className="action-card">
+              <FaWarehouse />
+              <h3>Armazém</h3>
+            </Link>
+            <Link to="/estoque" className="action-card">
+              <FaReceipt />
+              <h3>Estoque</h3>
+            </Link>
+          </div>
 
-              <div className="upgrade-banner">
-                {/* Conteúdo do banner de upgrade aqui */}
-              </div>
-            </>
-          )}
-        </main>
-      </div>
+          <div className="upgrade-banner">
+            {/* Conteúdo do banner de upgrade aqui */}
+          </div>
+        </>
+      )}
     </div>
-
   );
 };
 

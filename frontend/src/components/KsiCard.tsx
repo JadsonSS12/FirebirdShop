@@ -20,7 +20,7 @@ const KpiCard: React.FC<KpiCardProps> = ({ title, value, color }) => {
   return (
     <div className={`kpi-card ${color}`}>
       <span className="card-title">{title}</span>
-      <span className="card-value">{currencyFormatter.format(value)}</span>
+      <span className="card-value">{value}</span>
       <div className="card-icon">
         <FaArrowUp size={18} color={iconColor} />
       </div>

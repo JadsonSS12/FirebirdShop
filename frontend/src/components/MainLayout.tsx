@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaBoxOpen, FaClipboardList, FaShippingFast, FaTachometerAlt, FaTruck, FaUserFriends } from 'react-icons/fa';
+import { FaBoxOpen, FaClipboardList, FaShippingFast, FaTachometerAlt, FaTruck, FaUserFriends, FaWarehouse, FaReceipt } from 'react-icons/fa';
 import { NavLink, Outlet } from 'react-router-dom';
 
 const MainLayout: React.FC = () => {
@@ -37,6 +37,16 @@ const MainLayout: React.FC = () => {
             <li>
               <NavLink to="/entregas" title="Entregas">
                 <FaShippingFast size={22} />
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/armazem" title="Armazém">
+                <FaWarehouse size={22} />
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/estoque" title="Estoque">
+                <FaReceipt size={22} />
               </NavLink>
             </li>
           </ul>

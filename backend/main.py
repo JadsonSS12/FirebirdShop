@@ -22,7 +22,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,        # Lista de origens permitidas
+    allow_origins=["*"],          # Permite todas as origens
     allow_credentials=True,       # Permite cookies de credenciais
     allow_methods=["*"],          # Permite todos os métodos (GET, POST, PUT, etc.)
     allow_headers=["*"],          # Permite todos os cabeçalhos

@@ -29,7 +29,7 @@ def ler_estoque(estoque_id: int, db: Session = Depends(get_db)):
 
 @router.put("/{estoque_id}", response_model=schemas.Estoque)
 def atualizar_estoque(estoque_id: int, estoque_data: schemas.EstoqueUpdate, db: Session = Depends(get_db)):
-    return update_estoque(db=db, estoque_id=estoque_id, estoque_data=estoque_data)
+    return update_estoque(db=db, estoque_id=estoque_id, estoque=estoque_data)
 
 @router.delete("/{estoque_id}", response_model=schemas.Estoque)
 def deletar_estoque(estoque_id: int, db: Session = Depends(get_db)):

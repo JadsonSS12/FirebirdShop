@@ -6,7 +6,6 @@ import AddProductPage from "./pages/AddProductPage";
 import EditProductPage from "./pages/EditProductPage";
 import DashboardPage from "./pages/DashboardPage";
 import MainLayout from "./components/MainLayout";
-// import AddOrderPage from "./pages/AddOrderPage";
 import "./App.css";
 import AddClientPage from "./pages/AddClientPage";
 import EditClientPage from "./pages/EditClientPage";
@@ -14,6 +13,8 @@ import HomePage from "./pages/HomePage";
 import OrdersPage from "./pages/OrdersPage";
 import SupplierPage from "./pages/SupplierPage";
 import AddSupplierPage from "./pages/AddSupplierPage";
+import StoreroomPage from "./pages/StoreroomPage";
+import SupplyPage from "./pages/SupplyPage";
 // ...existing code...
 
 const App: React.FC = () => {
@@ -32,6 +33,8 @@ const App: React.FC = () => {
           <Route path="/pedidos" element={<OrdersPage />} />
           <Route path="/fornecedores" element={<SupplierPage />} />
           <Route path="/fornecedores/novo" element={<AddSupplierPage />} />
+          <Route path="/armazem" element={<StoreroomPage />} />
+          <Route path="/estoque" element={<SupplyPage />} />
         </Route>
       </Routes>
     </div>

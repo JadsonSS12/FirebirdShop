@@ -29,7 +29,7 @@ def ler_armazem(armazem_id: int, db: Session = Depends(get_db)):
 
 @router.put("/{armazem_id}", response_model=schemas.Armazem)
 def atualizar_armazem(armazem_id: int, armazem_data: schemas.ArmazemUpdate, db: Session = Depends(get_db)):
-    return update_armazem(db=db, armazem_id=armazem_id, armazem_data=armazem_data)
+    return update_armazem(db=db, armazem_id=armazem_id, armazem=armazem_data)
 
 @router.delete("/{armazem_id}", response_model=schemas.Armazem)
 def deletar_armazem(armazem_id: int, db: Session = Depends(get_db)):
