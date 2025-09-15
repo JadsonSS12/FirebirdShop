@@ -10,7 +10,20 @@ def get_pedido_produtos(db: Session, skip: int = 0, limit: int = 100):
 def create_pedido_produto(db: Session, pedido_produto: schemas.PedidoProdutoCreate):
     last_id = db.query(models.PedidoProduto.id).order_by(models.PedidoProduto.id.desc()).first()
     next_id = (last_id[0] if last_id else 0) + 1
+    
+    estoque = db.query(models.Estoque).filter(models.Estoque.produto_id == pedido_produto.produto_id).first()
+    if not estoque or pedido_produto.quantidade > estoque.quantidade:
+        db.query(models.Pedido).filter(models.Pedido.id == pedido_produto.pedido_id).delete()
+        db.commit()
+        return None
 
+     # Atualiza o estoque usando update explícito
+    db.query(models.Estoque).filter(models.Estoque.id == estoque.id).update(
+        {"quantidade": estoque.quantidade - pedido_produto.quantidade},
+        synchronize_session="fetch"
+    )
+    db.commit()
+    
     db_pedido_produto = models.PedidoProduto(
         id=next_id,
         pedido_id=pedido_produto.pedido_id,
