@@ -1,10 +1,8 @@
-// frontend/src/pages/AddClientPage.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './CrudPage.css';
 
-// Estrutura do formulário, baseada no seu Pydantic Schema
 const initialFormState = {
     nome: '',
     cpf_cnpj: '',
@@ -18,6 +16,7 @@ const initialFormState = {
     rua: '',
     numero: '',
     complemento: '',
+     email: '',
 };
 
 const AddClientPage: React.FC = () => {
@@ -33,17 +32,41 @@ const AddClientPage: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    axios.post('http://127.0.0.1:8000/cliente/', formData)
-    .then(() => {
+     try {
+      // 1. Cria o cliente principal (sem o email)
+      const clienteResponse = await axios.post('http://127.0.0.1:8000/cliente/', {
+        // Enviamos todos os dados, exceto o email
+        nome: formData.nome,
+        cpf_cnpj: formData.cpf_cnpj,
+        limite_de_credito: formData.limite_de_credito,
+        pais: formData.pais,
+        data_cadastro: formData.data_cadastro,
+        cep: formData.cep,
+        estado: formData.estado,
+        cidade: formData.cidade,
+        bairro: formData.bairro,
+        rua: formData.rua,
+        numero: formData.numero,
+        complemento: formData.complemento,
+      });
+
+      const novoClienteId = clienteResponse.data.id;
+
+      if (formData.email) {
+        await axios.post('http://127.0.0.1:8000/cliente-email/', {
+          email: formData.email,
+          cliente_id: novoClienteId, 
+        });
+      }
+
       navigate('/cliente');
-    })
-    .catch(error => {
-        console.error("Erro ao adicionar cliente:", error);
-        // Opcional: Mostrar um alerta para o usuário
-        alert(`Erro ao adicionar cliente: ${error.response?.data?.detail || error.message}`);
-    });
+
+    } catch (error) {
+      console.error("Erro ao adicionar cliente ou email:", error);
+      alert("Ocorreu um erro. Verifique o console para mais detalhes.");
+    };
   };
 
   return (
@@ -53,11 +76,15 @@ const AddClientPage: React.FC = () => {
       </header>
       
       <form className="crud-form" onSubmit={handleSubmit}>
-        {/* Usaremos um grid para organizar o formulário */}
         <div className="form-grid">
           <div className="form-group">
             <label htmlFor="nome">Nome Completo</label>
             <input id="nome" name="nome" type="text" value={formData.nome} onChange={handleChange} required />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="email">Email (Opcional)</label>
+            <input id="email" name="email" type="email" value={formData.email} onChange={handleChange} />
           </div>
 
           <div className="form-group">

@@ -20,34 +20,62 @@ interface Client {
     numero: string
 }
 
+interface ClientWithDetails extends Client {
+  email?: string; // Email é opcional
+}
+
 const ClientsPage: React.FC = () => {
-  const [clients, setClients] = useState<Client[]>([]);
+  const [clientsWithDetails, setClientsWithDetails] = useState<ClientWithDetails[]>([]);
   const navigate = useNavigate();
 
   const handleEdit = (id: number) => {
-    navigate(`/clientes/editar/${id}`);
+    navigate(`/cliente/editar/${id}`);
   }
 
   const handleDelete = (id: number) => {
-    // Pede confirmação antes de deletar
     if (window.confirm('Tem certeza que deseja excluir este cliente?')) {
-      axios.delete(`http://127.0.0.1:8000/cliente/${id}`)
-        .then(() => {
-          // Remove o cliente da lista na tela sem precisar recarregar a página
-          setClients(clients.filter(client => client.id !== id));
-        })
-        .catch(error => console.error("Erro ao deletar cliente:", error));
+  axios.delete(`http://127.0.0.1:8000/cliente/${id}`)
+    .then(() => {
+      setClientsWithDetails(clientsWithDetails.filter(client => client.id !== id));
+    })
+    .catch(error => console.error("Erro ao deletar cliente:", error));
     }
   };
 
 
-  useEffect(() => {
-    // Busca os dados dos clientes do seu backend FastAPI
-    axios.get<Client[]>('http://127.0.0.1:8000/cliente/')
-      .then(response => setClients(response.data));
+ useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [clientsResponse, emailsResponse] = await Promise.all([
+          axios.get('http://127.0.0.1:8000/cliente/'), // Endpoint de clientes
+          axios.get('http://127.0.0.1:8000/cliente-email/') // Endpoint de emails
+        ]);
+
+        const clients = clientsResponse.data;
+        const emails = emailsResponse.data;
+
+        // Cria um mapa para acesso rápido aos emails por cliente_id
+        const emailMap = new Map<number, string>();
+        emails.forEach((emailEntry: { cliente_id: number; email: string }) => {
+          // Se um cliente tiver múltiplos emails, pegará o último da lista
+          emailMap.set(emailEntry.cliente_id, emailEntry.email);
+        });
+
+        // Combina os dados
+        const combinedData = clients.map((client: Client) => ({
+          ...client,
+          email: emailMap.get(client.id) || 'N/A',
+        }));
+
+        setClientsWithDetails(combinedData);
+      } catch (error) {
+        console.error("Erro ao buscar clientes ou emails:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  // Defina as colunas para a tabela
   const columns = [
     { header: 'Nome', accessor: 'nome' },
     { header: 'CPF/CNPJ', accessor: 'cpf_cnpj' },
@@ -78,7 +106,7 @@ const ClientsPage: React.FC = () => {
       </div>
 
       <div className="table-container">
-        <DataTable columns={columns} data={clients} onEdit={handleEdit} onDelete={handleDelete} />
+        <DataTable columns={columns} data={clientsWithDetails} onEdit={handleEdit} onDelete={handleDelete} />
       </div>
     </div>
   );

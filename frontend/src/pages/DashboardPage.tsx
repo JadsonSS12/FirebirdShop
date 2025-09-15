@@ -42,9 +42,7 @@ const DashboardPage: React.FC = () => {
 
   return (
         <div className="dashboard-layout">
-      <aside className="sidebar">{/* ... */}</aside>
       <div className="content-wrapper">
-        <header className="header">{/* ... */}</header>
         <main className="main-content">
           {loading && <p>Carregando...</p>}
           {data && (
@@ -60,7 +58,7 @@ const DashboardPage: React.FC = () => {
                 <Link to="/produtos">
                   <ActionButton label="Produtos" icon={<FaBoxOpen />} />
                 </Link>
-                <Link to="/clientes">
+                <Link to="/cliente">
                   <ActionButton label="Cliente" icon={<FaUserFriends />} />
                 </Link>
                 <Link to="/fornecedores">
