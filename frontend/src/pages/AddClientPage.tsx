@@ -24,7 +24,7 @@ const AddClientPage: React.FC = () => {
   const [formData, setFormData] = useState(initialFormState);
   const navigate = useNavigate();
 
-  // Função genérica para a mudança em qualquer input
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
@@ -59,14 +59,25 @@ const AddClientPage: React.FC = () => {
   };
 
   const validateEmails = () => {
-    // Check for empty emails
     const emptyEmails = formData.emails.filter(email => email.trim() === '');
     if (emptyEmails.length > 0) {
       alert('Por favor, preencha todos os campos de email ou remova os vazios.');
       return false;
     }
 
-    // Check for duplicate emails
+      const sanitizedCpfCnpj = formData.cpf_cnpj.replace(/\D/g, ''); 
+    if (sanitizedCpfCnpj.length < 11) {
+      alert('O CPF/CNPJ deve conter no mínimo 11 dígitos.');
+      return;
+    }
+
+    // 2. Validação do CEP
+    const sanitizedCep = formData.cep.replace(/\D/g, ''); // Remove caracteres não numéricos
+    if (sanitizedCep.length < 8) {
+      alert('O CEP deve conter no mínimo 8 dígitos.');
+      return; 
+    }
+
     const emailSet = new Set();
     for (let i = 0; i < formData.emails.length; i++) {
       const email = formData.emails[i].trim().toLowerCase();
@@ -77,7 +88,6 @@ const AddClientPage: React.FC = () => {
       emailSet.add(email);
     }
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     for (let i = 0; i < formData.emails.length; i++) {
       const email = formData.emails[i].trim();
@@ -116,14 +126,12 @@ const AddClientPage: React.FC = () => {
   };
 
   const validateTelefones = () => {
-    // Check for empty phones
     const emptyTelefones = formData.telefones.filter(telefone => telefone.trim() === '');
     if (emptyTelefones.length > 0) {
       alert('Por favor, preencha todos os campos de telefone ou remova os vazios.');
       return false;
     }
 
-    // Check for duplicate phones
     const telefoneSet = new Set();
     for (let i = 0; i < formData.telefones.length; i++) {
       const telefone = formData.telefones[i].trim().replace(/\D/g, ''); // Remove non-digits for comparison
@@ -134,7 +142,6 @@ const AddClientPage: React.FC = () => {
       telefoneSet.add(telefone);
     }
 
-    // Validate phone format (basic validation - at least 8 digits)
     for (let i = 0; i < formData.telefones.length; i++) {
       const telefone = formData.telefones[i].trim().replace(/\D/g, '');
       if (telefone.length < 8) {
@@ -149,20 +156,16 @@ const AddClientPage: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Validate emails if any are provided
     if (formData.emails.length > 0 && !validateEmails()) {
       return;
     }
 
-    // Validate phones if any are provided
     if (formData.telefones.length > 0 && !validateTelefones()) {
       return;
     }
 
      try {
-      // 1. Cria o cliente principal (sem os emails e telefones)
       const clienteResponse = await axios.post('http://127.0.0.1:8000/cliente/', {
-        // Enviamos todos os dados, exceto os emails e telefones
         nome: formData.nome,
         cpf_cnpj: formData.cpf_cnpj,
         limite_de_credito: formData.limite_de_credito,
@@ -188,7 +191,6 @@ const AddClientPage: React.FC = () => {
         }
       }
 
-      // 3. Cria os telefones se existirem
       for (const telefone of formData.telefones) {
         if (telefone.trim()) {
           await axios.post('http://127.0.0.1:8000/cliente-telefone/', {
@@ -225,7 +227,6 @@ const AddClientPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Emails Section */}
         
 
         <div className="form-grid">
