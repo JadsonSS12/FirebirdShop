@@ -1,12 +1,46 @@
-// src/components/MainLayout.tsx
 import React from 'react';
-import { Outlet } from 'react-router-dom'; // Importe o Outlet
+import { FaBoxOpen, FaClipboardList, FaShippingFast, FaTachometerAlt, FaTruck, FaUserFriends } from 'react-icons/fa';
+import { NavLink, Outlet } from 'react-router-dom';
 
 const MainLayout: React.FC = () => {
   return (
     <div className="dashboard-layout">
-      <aside className="sidebar">
-        {/* barra lateral */}
+       <aside className="sidebar">
+        {/* 3. Adicione a estrutura de navegação */}
+        <nav className="sidebar-nav">
+          <ul>
+            <li>
+              <NavLink to="/dashboard" title="Dashboard">
+                <FaTachometerAlt size={22} />
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/produtos" title="Produtos">
+                <FaBoxOpen size={22} />
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/cliente" title="Clientes">
+                <FaUserFriends size={22} />
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/pedidos" title="Pedidos">
+                <FaClipboardList size={22} />
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/fornecedores" title="Fornecedores">
+                <FaTruck size={22} />
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/entregas" title="Entregas">
+                <FaShippingFast size={22} />
+              </NavLink>
+            </li>
+          </ul>
+        </nav>
       </aside>
       
       <main className="main-content">
