@@ -3,7 +3,7 @@ import axios from 'axios';
 import KpiCard from '../components/KsiCard';
 import './DashboardPage.css';
 import { Link } from 'react-router-dom';
-import { FaShoppingCart, FaReceipt, FaBoxOpen, FaUserFriends, FaTruck, FaWarehouse } from 'react-icons/fa';
+import { FaShoppingCart, FaReceipt, FaBoxOpen, FaUserFriends, FaTruck, FaWarehouse, FaShippingFast, FaIndustry } from 'react-icons/fa';
 
 
 // Interface para os dados que virão da API
@@ -61,7 +61,7 @@ const DashboardPage: React.FC = () => {
               <h3>Cliente</h3>
             </Link>
             <Link to="/fornecedores" className="action-card">
-              <FaTruck />
+              <FaIndustry />
               <h3>Fornecedor</h3>
             </Link>
             <Link to="/pedidos" className="action-card">
@@ -75,6 +75,14 @@ const DashboardPage: React.FC = () => {
             <Link to="/estoque" className="action-card">
               <FaReceipt />
               <h3>Estoque</h3>
+            </Link>
+            <Link to="/transportadora" className="action-card">
+              <FaTruck />
+              <h3>Transportadora</h3>
+            </Link>
+            <Link to="/entregas" className="action-card">
+              <FaShippingFast />
+              <h3>Entregas</h3>
             </Link>
           </div>
 
