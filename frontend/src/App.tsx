@@ -12,9 +12,10 @@ import AddClientPage from "./pages/AddClientPage";
 import EditClientPage from "./pages/EditClientPage";
 import HomePage from "./pages/HomePage";
 import OrdersPage from "./pages/OrdersPage";
+import SupplierPage from "./pages/SupplierPage";
+import AddSupplierPage from "./pages/AddSupplierPage";
+// ...existing code...
 
-
-// O componente App agora define a estrutura das rotas
 const App: React.FC = () => {
   return (
     <div>
@@ -29,6 +30,8 @@ const App: React.FC = () => {
           <Route path="/produtos/novo" element={<AddProductPage />} />
           <Route path="/produtos/editar/:id" element={<EditProductPage />} />
           <Route path="/pedidos" element={<OrdersPage />} />
+          <Route path="/fornecedores" element={<SupplierPage />} />
+          <Route path="/fornecedores/novo" element={<AddSupplierPage />} />
         </Route>
       </Routes>
     </div>
