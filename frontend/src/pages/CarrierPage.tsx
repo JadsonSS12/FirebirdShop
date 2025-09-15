@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DataTable from '../components/DataTable';
-import { Link, useNavigate } from 'react-router-dom';
 import './CrudPage.css';
 
 interface Transportadora {
   id: number;
   nome: string;
   nome_fantasia: string;
-  cnpj: string; // Mudado de cpf_cnpj para cnpj (conforme schema do backend)
+  cnpj: string;
   cep: string;
   estado: string;
   cidade: string;
@@ -27,7 +26,7 @@ interface TransportadoraWithDetails extends Transportadora {
 const initialFormState: Omit<TransportadoraWithDetails, 'id' | 'emails_formatted' | 'telefones_formatted'> = {
   nome: '',
   nome_fantasia: '',
-  cnpj: '', // Mudado de cpf_cnpj para cnpj
+  cnpj: '',
   cep: '',
   estado: '',
   cidade: '',
@@ -38,12 +37,12 @@ const initialFormState: Omit<TransportadoraWithDetails, 'id' | 'emails_formatted
   telefones: []
 };
 
-const TransportadoraPage: React.FC = () => {
+const CarrierPage: React.FC = () => {
   const [transportadoras, setTransportadoras] = useState<TransportadoraWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [editingCarrier, setEditingCarrier] = useState<TransportadoraWithDetails | null>(null);
   const [formData, setFormData] = useState(initialFormState);
-  const navigate = useNavigate();
 
   const formatEmails = (emails: string[]) => {
     if (!emails || emails.length === 0) return 'N/A';
@@ -101,42 +100,47 @@ const TransportadoraPage: React.FC = () => {
   }, []);
 
   const handleEdit = (id: number) => {
-    navigate(`/transportadora/editar/${id}`);
+    const carrier = transportadoras.find(t => t.id === id);
+    if (carrier) {
+      setEditingCarrier(carrier);
+      setFormData({
+        ...carrier,
+        emails: [...carrier.emails],
+        telefones: [...carrier.telefones],
+      });
+      setShowForm(true);
+    }
   };
 
   const handleDelete = async (id: number) => {
     if (!window.confirm('Tem certeza que deseja excluir esta transportadora?')) return;
-    
     try {
-      // Primeiro, deletar emails associados
-      const transportadora = transportadoras.find(t => t.id === id);
-      if (transportadora) {
-        // Buscar IDs dos emails para deletar
-        const emailsResp = await axios.get(`http://127.0.0.1:8000/transportadora-email/`);
-        const emailsToDelete = emailsResp.data.filter((email: any) => email.transportadora_id === id);
-        
-        for (const email of emailsToDelete) {
-          await axios.delete(`http://127.0.0.1:8000/transportadora-email/${email.id}`);
-        }
-
-        // Buscar IDs dos telefones para deletar
-        const telefonesResp = await axios.get(`http://127.0.0.1:8000/transportadora-telefone/`);
-        const telefonesToDelete = telefonesResp.data.filter((telefone: any) => telefone.transportadora_id === id);
-        
-        for (const telefone of telefonesToDelete) {
-          await axios.delete(`http://127.0.0.1:8000/transportadora-telefone/${telefone.id}`);
-        }
+      // Buscar IDs dos emails para deletar
+      const emailsResp = await axios.get(`http://127.0.0.1:8000/transportadora-email/`);
+      const emailsToDelete = emailsResp.data.filter((email: any) => email.transportadora_id === id);
+      for (const email of emailsToDelete) {
+        await axios.delete(`http://127.0.0.1:8000/transportadora-email/${email.id}`);
       }
-
+      // Buscar IDs dos telefones para deletar
+      const telefonesResp = await axios.get(`http://127.0.0.1:8000/transportadora-telefone/`);
+      const telefonesToDelete = telefonesResp.data.filter((telefone: any) => telefone.transportadora_id === id);
+      for (const telefone of telefonesToDelete) {
+        await axios.delete(`http://127.0.0.1:8000/transportadora-telefone/${telefone.id}`);
+      }
       // Depois deletar a transportadora
       await axios.delete(`http://127.0.0.1:8000/transportadora/${id}`);
-      
       setTransportadoras(prev => prev.filter(t => t.id !== id));
       alert('Transportadora excluída com sucesso!');
     } catch (error) {
       console.error('Erro ao deletar transportadora:', error);
       alert('Erro ao excluir transportadora. Tente novamente.');
     }
+  };
+
+  const handleCancelForm = () => {
+    setFormData(initialFormState);
+    setEditingCarrier(null);
+    setShowForm(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -147,11 +151,11 @@ const TransportadoraPage: React.FC = () => {
   const addEmail = () => {
     setFormData(prev => ({ ...prev, emails: [...prev.emails, ''] }));
   };
-  
+
   const removeEmail = (index: number) => {
     setFormData(prev => ({ ...prev, emails: prev.emails.filter((_, i) => i !== index) }));
   };
-  
+
   const updateEmail = (index: number, value: string) => {
     setFormData(prev => {
       const arr = [...prev.emails];
@@ -163,11 +167,11 @@ const TransportadoraPage: React.FC = () => {
   const addTelefone = () => {
     setFormData(prev => ({ ...prev, telefones: [...prev.telefones, ''] }));
   };
-  
+
   const removeTelefone = (index: number) => {
     setFormData(prev => ({ ...prev, telefones: prev.telefones.filter((_, i) => i !== index) }));
   };
-  
+
   const updateTelefone = (index: number, value: string) => {
     setFormData(prev => {
       const arr = [...prev.telefones];
@@ -221,68 +225,79 @@ const TransportadoraPage: React.FC = () => {
     return true;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.nome.trim()) {
       alert('Por favor, informe o nome da transportadora.');
       return;
     }
-
     if (formData.emails.length > 0 && !validateEmails()) return;
     if (formData.telefones.length > 0 && !validateTelefones()) return;
 
     try {
-      // 1. Criar transportadora
-      const resp = await axios.post('http://127.0.0.1:8000/transportadora/', {
-        nome: formData.nome,
-        nome_fantasia: formData.nome_fantasia,
-        cnpj: formData.cnpj, // Mudado de cpf_cnpj para cnpj
-        cep: formData.cep,
-        estado: formData.estado,
-        cidade: formData.cidade,
-        bairro: formData.bairro,
-        rua: formData.rua,
-        numero: formData.numero,
-      });
+      let carrierId = editingCarrier?.id;
+      if (editingCarrier) {
+        // Atualizar transportadora
+        await axios.put(`http://127.0.0.1:8000/transportadora/${carrierId}`, {
+          ...formData,
+        });
 
-      const novoId = resp.data.id;
+        // Buscar emails atuais da transportadora
+        const emailsResp = await axios.get(`http://127.0.0.1:8000/transportadora-email/`);
+        const emailsToDelete = emailsResp.data.filter((email: any) => email.transportadora_id === carrierId);
+        for (const emailObj of emailsToDelete) {
+          await axios.delete(`http://127.0.0.1:8000/transportadora-email/${emailObj.id}`);
+        }
 
-      // 2. Criar emails
+        // Buscar telefones atuais da transportadora
+        const telefonesResp = await axios.get(`http://127.0.0.1:8000/transportadora-telefone/`);
+        const telefonesToDelete = telefonesResp.data.filter((telefone: any) => telefone.transportadora_id === carrierId);
+        for (const telefoneObj of telefonesToDelete) {
+          await axios.delete(`http://127.0.0.1:8000/transportadora-telefone/${telefoneObj.id}`);
+        }
+      } else {
+        // Criar transportadora
+        const resp = await axios.post('http://127.0.0.1:8000/transportadora/', {
+          ...formData,
+        });
+        carrierId = resp.data.id;
+      }
+
+      // Salvar emails
       for (const email of formData.emails) {
         if (email.trim()) {
           await axios.post('http://127.0.0.1:8000/transportadora-email/', {
-            transportadora_id: novoId,
+            transportadora_id: carrierId,
             email: email.trim()
           });
         }
       }
 
-      // 3. Criar telefones
+      // Salvar telefones
       for (const telefone of formData.telefones) {
         if (telefone.trim()) {
           await axios.post('http://127.0.0.1:8000/transportadora-telefone/', {
-            transportadora_id: novoId,
+            transportadora_id: carrierId,
             telefone: telefone.trim()
           });
         }
       }
 
-      // Reset
+      alert(editingCarrier ? "Transportadora atualizada com sucesso!" : "Transportadora criada com sucesso!");
       setFormData(initialFormState);
+      setEditingCarrier(null);
       setShowForm(false);
       await fetchData();
-      alert('Transportadora criada com sucesso!');
     } catch (error: any) {
-      console.error('Erro ao criar transportadora:', error);
-      alert(`Erro ao criar transportadora: ${error.response?.data?.detail || error.message}`);
+      alert(`Erro ao ${editingCarrier ? 'atualizar' : 'criar'} transportadora: ${error.response?.data?.detail || error.message}`);
     }
   };
 
   const columns = [
     { header: 'Nome', accessor: 'nome' },
     { header: 'Nome Fantasia', accessor: 'nome_fantasia' },
-    { header: 'CNPJ', accessor: 'cnpj' }, // Mudado de 'CPF/CNPJ' para 'CNPJ'
+    { header: 'CNPJ', accessor: 'cnpj' },
     { header: 'Emails', accessor: 'emails_formatted' },
     { header: 'Telefones', accessor: 'telefones_formatted' },
     { header: 'CEP', accessor: 'cep' },
@@ -306,7 +321,11 @@ const TransportadoraPage: React.FC = () => {
       <header className="page-header">
         <h1>Transportadoras</h1>
         <div className="header-actions">
-          <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
+          <button className="btn-primary" onClick={() => {
+            setFormData(initialFormState);
+            setEditingCarrier(null);
+            setShowForm(!showForm);
+          }}>
             {showForm ? 'Cancelar' : 'Adicionar Transportadora'}
           </button>
         </div>
@@ -314,8 +333,8 @@ const TransportadoraPage: React.FC = () => {
 
       {showForm && (
         <div className="form-section">
-          <h2>Criar Nova Transportadora</h2>
-          <form className="crud-form" onSubmit={handleSubmit}>
+          <h2>{editingCarrier ? 'Editar Transportadora' : 'Criar Nova Transportadora'}</h2>
+          <form className="crud-form" onSubmit={handleFormSubmit}>
             <div className="form-grid">
               <div className="form-group">
                 <label>Nome</label>
@@ -355,16 +374,15 @@ const TransportadoraPage: React.FC = () => {
               </div>
             </div>
 
+            {/* Emails */}
             <div className="form-section">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
                 <h3>Emails</h3>
                 <button type="button" className="btn-primary" onClick={addEmail}>+ Adicionar Email</button>
               </div>
-
               {formData.emails.length === 0 && (
                 <p style={{ color: '#6c757d', textAlign: 'center', padding: '20px' }}>Nenhum email adicionado.</p>
               )}
-
               {formData.emails.map((email, idx) => (
                 <div key={idx} style={{ border: '1px solid #dee2e6', borderRadius: 5, padding: 15, marginBottom: 10, backgroundColor: '#fff' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
@@ -373,28 +391,27 @@ const TransportadoraPage: React.FC = () => {
                   </div>
                   <div className="form-group">
                     <label>Endereço de Email</label>
-                    <input 
-                      type="email" 
-                      value={email} 
-                      onChange={(e) => updateEmail(idx, e.target.value)} 
-                      placeholder="exemplo@email.com" 
-                      required={formData.emails.length > 0} 
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => updateEmail(idx, e.target.value)}
+                      placeholder="exemplo@email.com"
+                      required={formData.emails.length > 0}
                     />
                   </div>
                 </div>
               ))}
             </div>
 
+            {/* Telefones */}
             <div className="form-section">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
                 <h3>Telefones</h3>
                 <button type="button" className="btn-primary" onClick={addTelefone}>+ Adicionar Telefone</button>
               </div>
-
               {formData.telefones.length === 0 && (
                 <p style={{ color: '#6c757d', textAlign: 'center', padding: '20px' }}>Nenhum telefone adicionado.</p>
               )}
-
               {formData.telefones.map((tel, idx) => (
                 <div key={idx} style={{ border: '1px solid #dee2e6', borderRadius: 5, padding: 15, marginBottom: 10, backgroundColor: '#fff' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
@@ -403,12 +420,12 @@ const TransportadoraPage: React.FC = () => {
                   </div>
                   <div className="form-group">
                     <label>Número</label>
-                    <input 
-                      type="tel" 
-                      value={tel} 
-                      onChange={(e) => updateTelefone(idx, e.target.value)} 
-                      placeholder="(11) 99999-9999" 
-                      required={formData.telefones.length > 0} 
+                    <input
+                      type="tel"
+                      value={tel}
+                      onChange={(e) => updateTelefone(idx, e.target.value)}
+                      placeholder="(11) 99999-9999"
+                      required={formData.telefones.length > 0}
                     />
                   </div>
                 </div>
@@ -416,8 +433,10 @@ const TransportadoraPage: React.FC = () => {
             </div>
 
             <div className="form-actions">
-              <button type="button" className="btn-secondary" onClick={() => { setFormData(initialFormState); setShowForm(false); }}>Cancelar</button>
-              <button type="submit" className="btn-primary">Criar Transportadora</button>
+              <button type="button" className="btn-secondary" onClick={handleCancelForm}>Cancelar</button>
+              <button type="submit" className="btn-primary">
+                {editingCarrier ? 'Atualizar Transportadora' : 'Criar Transportadora'}
+              </button>
             </div>
           </form>
         </div>
@@ -434,4 +453,4 @@ const TransportadoraPage: React.FC = () => {
   );
 };
 
-export default TransportadoraPage;
+export default CarrierPage;

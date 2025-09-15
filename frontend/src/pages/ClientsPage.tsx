@@ -222,9 +222,15 @@ const ClientsPage: React.FC = () => {
         await axios.put(`http://127.0.0.1:8000/cliente/${clienteId}`, {
           ...formData,
         });
-        // Atualizar emails/telefones: apaga todos e recria
-        await axios.delete(`http://127.0.0.1:8000/cliente-email/cliente/${clienteId}`);
-        await axios.delete(`http://127.0.0.1:8000/cliente-telefone/cliente/${clienteId}`);
+          const emailsResponse = await axios.get(`http://127.0.0.1:8000/cliente-email-cliente/${clienteId}`);
+          for (const emailObj of emailsResponse.data) {
+            await axios.delete(`http://127.0.0.1:8000/cliente-email/${emailObj.id}`);
+          }
+
+          const telefonesResponse = await axios.get(`http://127.0.0.1:8000/cliente-telefone-cliente/${clienteId}`);
+          for (const telefoneObj of telefonesResponse.data) {
+            await axios.delete(`http://127.0.0.1:8000/cliente-telefone/${telefoneObj.id}`);
+  }
       } else {
         // Criar cliente
         const clienteResponse = await axios.post('http://127.0.0.1:8000/cliente/', {
