@@ -1,5 +1,5 @@
 // frontend/src/pages/ClientsPage.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import DataTable from '../components/DataTable';
 import { Link, useNavigate } from 'react-router-dom';
@@ -29,6 +29,7 @@ interface ClientWithDetails extends Client {
 
 const ClientsPage: React.FC = () => {
   const [clientsWithDetails, setClientsWithDetails] = useState<ClientWithDetails[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   const formatEmails = (emails: string[]) => {
@@ -119,23 +120,47 @@ const ClientsPage: React.FC = () => {
     { header: 'Número', accessor: 'numero' }
   ];
 
+  const filteredClients = useMemo(() => {
+    if (!searchTerm) {
+      return clientsWithDetails; // Se a busca estiver vazia, retorna todos os clientes
+    }
+    
+    // Converte o termo de busca para minúsculas para uma busca não sensível a maiúsculas
+    const lowercasedFilter = searchTerm.toLowerCase();
+
+    return clientsWithDetails.filter((client) => {
+      // Verifica se o termo de busca está presente em algum dos campos do cliente
+      return (
+        client.nome.toLowerCase().includes(lowercasedFilter) ||
+        client.cpf_cnpj.includes(lowercasedFilter) || // CPF/CNPJ geralmente não precisa de toLowerCase
+        client.emails_formatted.toLowerCase().includes(lowercasedFilter) ||
+        client.cidade.toLowerCase().includes(lowercasedFilter)
+      );
+    });
+  }, [searchTerm, clientsWithDetails]);
+
   return (
     <div className="crud-page">
       <header className="page-header">
         <h1>Clientes</h1>
         <div className="header-actions">
             <Link to="/cliente/novo">
-          <button className="btn-primary">Adicionar Cliente</button>
+              <button className="btn-primary">Adicionar Cliente</button>
           </Link>
         </div>
       </header>
 
       <div className="action-bar">
-        <input type="text" placeholder="Pesquisa rápida por palavras-chave..." />
+        <input 
+                type="text" 
+                placeholder="Pesquisa rápida por palavras-chave..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+            />      
       </div>
 
       <div className="table-container">
-        <DataTable columns={columns} data={clientsWithDetails} onEdit={handleEdit} onDelete={handleDelete} />
+        <DataTable columns={columns} data={filteredClients} onEdit={handleEdit} onDelete={handleDelete} />
       </div>
     </div>
   );
